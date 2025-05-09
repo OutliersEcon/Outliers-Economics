@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Price Elasticity of Demand Calculator | 需求價格彈性計算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        p {
+            color: #555;
+        }
+        label {
+            margin-right: 10px;
+            font-weight: bold;
+            color: #444;
+        }
+        input {
+            margin: 10px 0;
+            padding: 8px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #2e7d32;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffecb3;
+            color: #856404;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Price Elasticity of Demand Calculator | 需求價格彈性計算器</h1>
+        <p>Calculate the price elasticity of demand using the midpoint formula.<br>
+        使用中點公式計算需求價格彈性。</p>
+
+        <label>Initial Quantity (初始數量):</label><br>
+        <input type="number" id="q1" placeholder="e.g., 100" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();"><br>
+        <label>New Quantity (新數量):</label><br>
+        <input type="number" id="q2" placeholder="e.g., 80" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();"><br>
+        <label>Initial Price (初始價格):</label><br>
+        <input type="number" id="p1" placeholder="e.g., 10" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();"><br>
+        <label>New Price (新價格):</label><br>
+        <input type="number" id="p2" placeholder="e.g., 12" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();"><br>
+
+        <div id="result"></div>
+
+        <div class="links">
+            <p><a href="https://outliersecon.github.io/Outliers-Economics/">Back to Home | 返回首頁</a></p>
+            <p><a href="https://buymeacoffee.com/outliersecon">Buy Me a Coffee | 請我飲杯咖啡</a></p>
+        </div>
+    </div>
+
+    <script>
+function _0x11cf(_0x1ecf66,_0x421b7a){const _0x3df299=_0x3df2();return _0x11cf=function(_0x11cf95,_0x1a0569){_0x11cf95=_0x11cf95-0x75;let _0x35f9c8=_0x3df299[_0x11cf95];return _0x35f9c8;},_0x11cf(_0x1ecf66,_0x421b7a);}(function(_0x63cbdc,_0x3481b7){const _0x28f1f6=_0x11cf,_0x588673=_0x63cbdc();while(!![]){try{const _0x43cf9b=parseInt(_0x28f1f6(0x78))/0x1*(-parseInt(_0x28f1f6(0x7b))/0x2)+-parseInt(_0x28f1f6(0x8e))/0x3*(-parseInt(_0x28f1f6(0x7e))/0x4)+parseInt(_0x28f1f6(0x90))/0x5+-parseInt(_0x28f1f6(0x94))/0x6*(-parseInt(_0x28f1f6(0x86))/0x7)+-parseInt(_0x28f1f6(0x75))/0x8*(parseInt(_0x28f1f6(0x77))/0x9)+-parseInt(_0x28f1f6(0x87))/0xa*(parseInt(_0x28f1f6(0x8f))/0xb)+-parseInt(_0x28f1f6(0x79))/0xc*(-parseInt(_0x28f1f6(0x7a))/0xd);if(_0x43cf9b===_0x3481b7)break;else _0x588673['push'](_0x588673['shift']());}catch(_0x54a791){_0x588673['push'](_0x588673['shift']());}}}(_0x3df2,0x96dd4));function restrictInput(_0x46209f){const _0x15b1e7=_0x11cf;_0x46209f[_0x15b1e7(0x7c)]<=0x0&&(_0x46209f[_0x15b1e7(0x7c)]='');}function calculateElasticity(){const _0x5f134e=_0x11cf,_0x4098bc=document[_0x5f134e(0x8b)]('result'),_0x32e4f3=parseFloat(document[_0x5f134e(0x8b)]('q1')[_0x5f134e(0x7c)]),_0x58844a=parseFloat(document[_0x5f134e(0x8b)]('q2')['value']),_0x26f405=parseFloat(document[_0x5f134e(0x8b)]('p1')[_0x5f134e(0x7c)]),_0x2707e2=parseFloat(document['getElementById']('p2')[_0x5f134e(0x7c)]);if(isNaN(_0x32e4f3)||isNaN(_0x58844a)||isNaN(_0x26f405)||isNaN(_0x2707e2)||_0x32e4f3<=0x0||_0x58844a<=0x0||_0x26f405<=0x0||_0x2707e2<=0x0){_0x4098bc[_0x5f134e(0x8a)][_0x5f134e(0x88)]='none';return;}const _0x265026=_0x32e4f3===_0x58844a,_0x2e64c9=_0x26f405===_0x2707e2;if(_0x265026&&_0x2e64c9){_0x4098bc[_0x5f134e(0x84)]=_0x5f134e(0x76),_0x4098bc[_0x5f134e(0x80)][_0x5f134e(0x8d)]('warning'),_0x4098bc[_0x5f134e(0x8a)][_0x5f134e(0x88)]=_0x5f134e(0x81);return;}else{if(_0x265026){_0x4098bc[_0x5f134e(0x84)]=_0x5f134e(0x85),_0x4098bc[_0x5f134e(0x80)][_0x5f134e(0x8d)](_0x5f134e(0x93)),_0x4098bc[_0x5f134e(0x8a)]['display']=_0x5f134e(0x81);return;}else{if(_0x2e64c9){_0x4098bc[_0x5f134e(0x84)]='Elasticity\x20|\x20彈性:\x20Perfectly\x20Elastic\x20(完全彈性)',_0x4098bc[_0x5f134e(0x80)][_0x5f134e(0x8d)](_0x5f134e(0x93)),_0x4098bc[_0x5f134e(0x8a)][_0x5f134e(0x88)]=_0x5f134e(0x81);return;}}}const _0x940bdf=_0x2707e2>_0x26f405,_0x2eb169=_0x58844a>_0x32e4f3,_0xa8e600=_0x2707e2<_0x26f405,_0x2afcaa=_0x58844a<_0x32e4f3,_0x1aedbb=_0x940bdf&&_0x2eb169||_0xa8e600&&_0x2afcaa,_0x378040=(_0x32e4f3-_0x58844a)/(_0x32e4f3+_0x58844a),_0x316fd0=(_0x26f405-_0x2707e2)/(_0x26f405+_0x2707e2),_0x65adbf=Math[_0x5f134e(0x89)](_0x378040/_0x316fd0);let _0x29fea6;if(_0x65adbf<0x1)_0x29fea6=_0x5f134e(0x83);else _0x65adbf===0x1?_0x29fea6=_0x5f134e(0x92):_0x29fea6='Elastic\x20(高彈性)';let _0x344e09=_0x5f134e(0x7d)+_0x65adbf[_0x5f134e(0x91)](0x2)+'\x20'+_0x29fea6;_0x1aedbb?(_0x344e09+=_0x5f134e(0x7f),_0x4098bc['classList'][_0x5f134e(0x8c)](_0x5f134e(0x93))):_0x4098bc[_0x5f134e(0x80)]['remove'](_0x5f134e(0x93)),_0x4098bc[_0x5f134e(0x82)]=_0x344e09,_0x4098bc[_0x5f134e(0x8a)]['display']='block';}function _0x3df2(){const _0x57469b=['remove','3YgfLvd','45364meqMIt','4016905dzTyxI','toFixed','Unitary\x20Elastic\x20(單一彈性)','warning','1170wJeOnH','308128yhXbfD','Elasticity\x20|\x20彈性:\x20Indeterminate\x20(不確定)','63tkhKPW','535547ZtfSvX','504DzvRiW','145847ULFWga','4YTHbik','value','Elasticity\x20|\x20彈性:\x20','935756NfXmhN','<hr>Warning\x20|\x20警告:\x20Price\x20and\x20quantity\x20are\x20positively\x20related,\x20which\x20implies\x20that\x20the\x20demand\x20curve\x20is\x20upward\x20sloping.\x20|\x20價格與數量呈正相關，這意味著需求曲線向上傾斜。','classList','block','innerHTML','Inelastic\x20(低彈性)','innerText','Elasticity\x20|\x20彈性:\x20Perfectly\x20Inelastic\x20(完全無彈性)','21784tvGMDe','380XtGOsY','display','abs','style','getElementById','add'];_0x3df2=function(){return _0x57469b;};return _0x3df2();}
+    </script>
+</body>
+</html>
