@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Production Possibility Frontier (生產可能線)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+    .controls {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .controls label {
+      font-size: 16px;
+      margin-right: 5px;
+      color: #333;
+    }
+    .controls input {
+      padding: 5px;
+      font-size: 16px;
+      margin-right: 15px;
+      width: 120px;
+    }
+    canvas {
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+    /* Additional styles for the links section */
+    .links {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .links a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Production Possibility Frontier (生產可能線)</h1>
+  <div class="controls">
+    <!-- Updated Global Maximum Input -->
+    <label for="globalMax">
+      單一商品生產上限<br>
+      Maximum Production Capacity per Good:
+    </label>
+    <input type="number" id="globalMax" value="100" min="10" step="1" 
+           onchange="updateGraph()"
+           oninput="if(Number(this.value) > Number(document.getElementById('globalMax').value)){ this.value = document.getElementById('globalMax').value } else if(Number(this.value) < 1){ this.value = 1 }">
+    <br><br>
+    <!-- Good X input -->
+    <label for="maxX">
+      最大生產量 (物品X)<br>
+      Maximum Production Capacity (Good X):
+    </label>
+    <input type="number" id="maxX" value="80" min="1" step="1" 
+           onchange="updateGraph()"
+           oninput="if(Number(this.value) > Number(document.getElementById('globalMax').value)){ this.value = document.getElementById('globalMax').value } else if(Number(this.value) < 1){ this.value = 1 }">
+    <br><br>
+    <!-- Good Y input -->
+    <label for="maxY">
+      最大生產量 (物品Y)<br>
+      Maximum Production Capacity (Good Y):
+    </label>
+    <input type="number" id="maxY" value="80" min="1" step="1" 
+           onchange="updateGraph()"
+           oninput="if(this.value > document.getElementById('globalMax').value){ this.value = document.getElementById('globalMax').value } else if(this.value < 1){ this.value = 1 }">
+  </div>
+  
+  <canvas id="ppfCanvas" width="600" height="600"></canvas>
+  
+  <!-- Added Links Section with Improved Design -->
+  <div class="links">
+    <p><a href="https://outliersecon.github.io/Outliers-Economics/">Back to Home | 返回首頁</a></p>
+    <p><a href="https://buymeacoffee.com/outliersecon">Buy Me a Coffee | 請我飲杯咖啡</a></p>
+  </div>
+  
+  <script>
+const _0x2eafef=_0x2961;(function(_0x22674b,_0x28edd5){const _0x1e2b8e=_0x2961,_0x522e02=_0x22674b();while(!![]){try{const _0x3f0089=parseInt(_0x1e2b8e(0x122))/0x1*(parseInt(_0x1e2b8e(0x10f))/0x2)+parseInt(_0x1e2b8e(0x125))/0x3*(parseInt(_0x1e2b8e(0x130))/0x4)+-parseInt(_0x1e2b8e(0x133))/0x5+-parseInt(_0x1e2b8e(0x110))/0x6*(parseInt(_0x1e2b8e(0x132))/0x7)+-parseInt(_0x1e2b8e(0x11a))/0x8*(-parseInt(_0x1e2b8e(0x11d))/0x9)+-parseInt(_0x1e2b8e(0x128))/0xa+-parseInt(_0x1e2b8e(0x116))/0xb*(parseInt(_0x1e2b8e(0x12d))/0xc);if(_0x3f0089===_0x28edd5)break;else _0x522e02['push'](_0x522e02['shift']());}catch(_0x59f0cd){_0x522e02['push'](_0x522e02['shift']());}}}(_0x2768,0x1e6d1));function _0x2768(){const _0x14c430=['getElementById','save','measureText','605796FLFnjU','clearRect','font','414340QGHzCL','物品Y\x20(Good\x20Y)','7VZHNqX','548940oqRoaN','PPF','#e9f5ff','value','moveTo','fillStyle','bold\x2012px\x20Arial','restore','maxX','addColorStop','4qqPbPA','901116HerAoY','width','maxY','lineTo','blue','物品X\x20(Good\x20X)','11ObgJPV','round','12px\x20Arial','16px\x20Arial','318992mBPRly','#333','fillText','45xCyERY','#ddd','lineWidth','strokeStyle','max','83282BgFeMx','#ffffff','createLinearGradient','6bRBVJZ','stroke','beginPath','1380220tHZYft','height'];_0x2768=function(){return _0x14c430;};return _0x2768();}const canvas=document[_0x2eafef(0x12a)]('ppfCanvas'),ctx=canvas['getContext']('2d'),margin=0x3c,xOffset=0x1e;function mapX(_0x4084e7,_0x507235){const _0x4e3b00=_0x2eafef;return margin+xOffset+_0x4084e7/_0x507235*(canvas[_0x4e3b00(0x111)]-0x2*margin);}function _0x2961(_0x35dabf,_0xd2ba79){const _0x27681b=_0x2768();return _0x2961=function(_0x296102,_0xb81831){_0x296102=_0x296102-0x10f;let _0x1f8bc2=_0x27681b[_0x296102];return _0x1f8bc2;},_0x2961(_0x35dabf,_0xd2ba79);}function mapY(_0x4a6034,_0x1b7469){const _0x45ee39=_0x2eafef;return canvas[_0x45ee39(0x129)]-margin-_0x4a6034/_0x1b7469*(canvas[_0x45ee39(0x129)]-0x2*margin);}function drawGrid(_0x1d8c0f){const _0x26728a=_0x2eafef;ctx[_0x26728a(0x12e)](0x0,0x0,canvas[_0x26728a(0x111)],canvas[_0x26728a(0x129)]);const _0x7b1d32=ctx[_0x26728a(0x124)](0x0,0x0,0x0,canvas[_0x26728a(0x129)]);_0x7b1d32[_0x26728a(0x13c)](0x0,_0x26728a(0x135)),_0x7b1d32['addColorStop'](0x1,_0x26728a(0x123)),ctx['fillStyle']=_0x7b1d32,ctx['fillRect'](0x0,0x0,canvas[_0x26728a(0x111)],canvas[_0x26728a(0x129)]),ctx[_0x26728a(0x120)]=_0x26728a(0x11e),ctx[_0x26728a(0x11f)]=0x1;const _0x414377=0xa;for(let _0x204687=0x0;_0x204687<=_0x414377;_0x204687++){const _0x24d21d=margin+xOffset+_0x204687*((canvas[_0x26728a(0x111)]-0x2*margin)/_0x414377);ctx[_0x26728a(0x127)](),ctx[_0x26728a(0x137)](_0x24d21d,margin),ctx[_0x26728a(0x113)](_0x24d21d,canvas['height']-margin),ctx['stroke'](),ctx[_0x26728a(0x12f)]=_0x26728a(0x118);const _0x5a9bc7=Math[_0x26728a(0x117)](_0x204687/_0x414377*_0x1d8c0f);ctx[_0x26728a(0x138)]=_0x26728a(0x11b),ctx[_0x26728a(0x11c)](_0x5a9bc7,_0x24d21d-0xa,canvas[_0x26728a(0x129)]-margin+0x14);}const _0x45921b=0xa;for(let _0x17614c=0x0;_0x17614c<=_0x45921b;_0x17614c++){const _0x1a7e56=margin+_0x17614c*((canvas[_0x26728a(0x129)]-0x2*margin)/_0x45921b);ctx['beginPath'](),ctx[_0x26728a(0x137)](margin+xOffset,_0x1a7e56),ctx[_0x26728a(0x113)](canvas[_0x26728a(0x111)]-margin+xOffset,_0x1a7e56),ctx[_0x26728a(0x126)](),ctx[_0x26728a(0x12f)]=_0x26728a(0x118);const _0x3dad3a=Math[_0x26728a(0x117)]((0x1-_0x17614c/_0x45921b)*_0x1d8c0f);ctx[_0x26728a(0x138)]=_0x26728a(0x11b),ctx[_0x26728a(0x11c)](_0x3dad3a,margin+xOffset-0x23,_0x1a7e56+0x5);}}function drawAxes(_0x309fb3){const _0x2bc434=_0x2eafef;ctx[_0x2bc434(0x120)]='#333',ctx[_0x2bc434(0x11f)]=0x2,ctx[_0x2bc434(0x127)](),ctx['moveTo'](margin+xOffset,canvas[_0x2bc434(0x129)]-margin),ctx[_0x2bc434(0x113)](canvas['width']-margin+xOffset,canvas[_0x2bc434(0x129)]-margin),ctx[_0x2bc434(0x126)](),ctx['beginPath'](),ctx[_0x2bc434(0x137)](margin+xOffset,canvas[_0x2bc434(0x129)]-margin),ctx['lineTo'](margin+xOffset,margin),ctx[_0x2bc434(0x126)](),ctx[_0x2bc434(0x138)]=_0x2bc434(0x11b),ctx['font']=_0x2bc434(0x119);const _0xbc16b4=(margin+xOffset+(canvas['width']-margin+xOffset))/0x2;ctx['fillText'](_0x2bc434(0x115),_0xbc16b4-0x32,canvas[_0x2bc434(0x129)]-margin+0x32),ctx[_0x2bc434(0x12b)](),ctx['translate'](margin+xOffset-0x32,canvas['height']/0x2+0x32),ctx['rotate'](-Math['PI']/0x2),ctx['fillText'](_0x2bc434(0x131),0x0,0x0),ctx[_0x2bc434(0x13a)]();}function drawPPF(_0x527fbf,_0xd775e5,_0x503e71){const _0x3f37b3=_0x2eafef;ctx[_0x3f37b3(0x120)]=_0x3f37b3(0x114),ctx[_0x3f37b3(0x11f)]=0x3,ctx['beginPath']();const _0x5c2745=mapX(0x0,_0x503e71),_0xda2e74=mapY(_0xd775e5,_0x503e71),_0x4ac57c=mapX(_0x527fbf,_0x503e71),_0x7c4ba8=mapY(0x0,_0x503e71);ctx['moveTo'](_0x5c2745,_0xda2e74),ctx[_0x3f37b3(0x113)](_0x4ac57c,_0x7c4ba8),ctx['stroke']();const _0xe0a8ce=(_0x5c2745+_0x4ac57c)/0x2,_0x21b937=(_0xda2e74+_0x7c4ba8)/0x2;ctx[_0x3f37b3(0x138)]=_0x3f37b3(0x114),ctx[_0x3f37b3(0x12f)]='bold\x2016px\x20Arial';const _0x411817=_0x3f37b3(0x134);ctx[_0x3f37b3(0x11c)](_0x411817,_0xe0a8ce+0xa,_0x21b937-0xa);const _0x57ff10=ctx[_0x3f37b3(0x12c)](_0x411817)['width'];ctx[_0x3f37b3(0x12f)]=_0x3f37b3(0x139),ctx[_0x3f37b3(0x11c)]('A',_0xe0a8ce+0xa+_0x57ff10,_0x21b937-0x5);}function updateGraph(){const _0x48fa4b=_0x2eafef;let _0x5c4418=parseFloat(document[_0x48fa4b(0x12a)]('globalMax')['value']);if(isNaN(_0x5c4418)||_0x5c4418<0x1)_0x5c4418=0x1;const _0x7f888e=document[_0x48fa4b(0x12a)](_0x48fa4b(0x13b)),_0x5f035b=document['getElementById'](_0x48fa4b(0x112));_0x7f888e[_0x48fa4b(0x121)]=_0x5c4418,_0x5f035b[_0x48fa4b(0x121)]=_0x5c4418;let _0x5718b5=parseFloat(_0x7f888e[_0x48fa4b(0x136)]),_0x297cce=parseFloat(_0x5f035b[_0x48fa4b(0x136)]);if(isNaN(_0x5718b5)||_0x5718b5<0x1)_0x5718b5=0x1;if(_0x5718b5>_0x5c4418)_0x5718b5=_0x5c4418;if(isNaN(_0x297cce)||_0x297cce<0x1)_0x297cce=0x1;if(_0x297cce>_0x5c4418)_0x297cce=_0x5c4418;_0x7f888e[_0x48fa4b(0x136)]=_0x5718b5,_0x5f035b[_0x48fa4b(0x136)]=_0x297cce,drawGrid(_0x5c4418),drawAxes(_0x5c4418),drawPPF(_0x5718b5,_0x297cce,_0x5c4418);}updateGraph();
+  </script>
+</body>
+</html>
