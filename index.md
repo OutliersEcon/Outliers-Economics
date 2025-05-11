@@ -9,6 +9,7 @@
 
 ## Quiz 測驗
 - [Profit Maximization (利潤極大化)](Quiz/ProfitMaximization_public.html)
+- [Required Reserve Ratio (法定儲備比率)](Quiz/RequiredReserveRatio_public.html)
 
 ## 其他
 - [聯絡我](mailto:outliers.hk@gmail.com)
