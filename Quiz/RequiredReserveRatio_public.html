@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" id="html-lang">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Required Reserve Ratio</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f4f7fa;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h3 {
+            color: #333;
+            margin: 20px 0 15px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 10px 0;
+            gap: 10px;
+        }
+        label {
+            font-weight: 500;
+            color: #444;
+            margin-right: 10px;
+        }
+        input[type="number"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        input:invalid {
+            border-color: #dc3545;
+        }
+        .table-responsive {
+            width: 100%;
+            max-width: 600px; /* Limit table width */
+            overflow-x: auto;
+            margin-bottom: 15px;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .table-responsive::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 15px;
+            background: linear-gradient(to right, transparent, rgba(0,0,0,0.1));
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .table-responsive::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 15px;
+            background: linear-gradient(to right, transparent, rgba(0,0,0,0.1));
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .table-responsive.at-start::after {
+            opacity: 1;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+        .table-responsive.at-end::before {
+            opacity: 1;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+        .table-responsive.in-middle::after,
+        .table-responsive.in-middle::before {
+            opacity: 0.7;
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        .scroll-hint {
+            display: none;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .scroll-hint {
+                display: block;
+            }
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 0;
+            background-color: #f8f9fa;
+            min-width: 300px; /* Reduced min-width for smaller tables */
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            font-size: 15px;
+        }
+        th {
+            background-color: #e9ecef;
+            font-weight: 500;
+            color: #333;
+        }
+        td {
+            width: 100px;
+        }
+        th:first-child, td:first-child {
+            width: 150px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            background-color: #28a745;
+            color: #fff;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin: 5px 0;
+            display: none;
+        }
+        .feedback {
+            color: #28a745;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .feedback.incorrect {
+            color: #dc3545;
+        }
+        .links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                margin: 20px auto;
+            }
+            .container {
+                padding: 15px;
+            }
+            h2 {
+                font-size: 22px;
+            }
+            h3 {
+                font-size: 18px;
+            }
+            p {
+                font-size: 15px;
+            }
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .input-group > * {
+                margin-bottom: 8px;
+            }
+            .feedback {
+                display: block;
+                margin-left: 0;
+                margin-top: 5px;
+            }
+            th, td {
+                padding: 6px;
+                font-size: 14px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+            button {
+                width: 100%;
+                margin-top: 15px;
+            }
+            .table-responsive {
+                border: 1px solid #ddd;
+                box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            }
+            .scroll-icon {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 5px;
+                color: #666;
+                font-size: 14px;
+            }
+            .scroll-icon::before {
+                content: "←";
+                margin-right: 5px;
+                opacity: 1;
+                transition: opacity 0.3s ease;
+            }
+            .scroll-icon::after {
+                content: "→";
+                margin-left: 5px;
+                opacity: 1;
+                transition: opacity 0.3s ease;
+            }
+            .scroll-icon.at-start::before {
+                opacity: 0.3;
+            }
+            .scroll-icon.at-end::after {
+                opacity: 0.3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="text-align: right; margin-bottom: 20px;">
+            <button id="toggle-language">Switch to Traditional Chinese</button>
+        </div>
+        <h2 data-lang-key="title">Quiz: Required Reserve Ratio</h2>
+        <p style="text-align: center; color: #555; margin-bottom: 20px;" data-lang-key="description">
+            This tool generates economics questions on the required reserve ratio for banks and checks answers in real-time.
+        </p>
+
+        <!-- Question 1 -->
+        <div class="question">
+            <h3 data-lang-key="question1_title">Question 1 (Easy)</h3>
+            <p data-lang-key="question1_text">The following table shows the balance sheet of a bank ($ million):</p>
+            <div class="scroll-hint" data-lang-key="scroll_hint_right">Move right to view full table</div>
+            <div class="scroll-icon"></div>
+            <div class="table-responsive at-start" data-scroll-container="1">
+                <table id="Table1">
+                    <tr>
+                        <th data-lang-key="assets">Assets</th>
+                        <th data-lang-key="amount">($ million)</th>
+                        <th data-lang-key="liabilities">Liabilities</th>
+                        <th data-lang-key="amount">($ million)</th>
+                    </tr>
+                    <tr>
+                        <th data-lang-key="reserves">Reserves</th>
+                        <td id="Table1_R"></td>
+                        <th data-lang-key="deposits">Deposits</th>
+                        <td id="Table1_D"></td>
+                    </tr>
+                    <tr>
+                        <th data-lang-key="loans">Loans</th>
+                        <td id="Table1_L"></td>
+                        <th></th>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <p data-lang-key="question1_prompt1">Suppose the <b>required reserve</b> was: $<span id="Q1_Text"></span> million.</p>
+            <p data-lang-key="question1_prompt2">What is the required reserve ratio?</p>
+            <div class="input-group">
+                <label for="Q1_student_ans" data-lang-key="answer_label">Answer (%):</label>
+                <input type="number" id="Q1_student_ans" min="1" max="100" step="0.1">
+                <span class="feedback" id="Checkans_Q1"></span>
+            </div>
+            <div class="error" id="Q1_error" data-lang-key="error_q1">Please enter a valid number between 1 and 100.</div>
+            <button onclick="generateQ1()" data-lang-key="new_question">New Question</button>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="question">
+            <h3 data-lang-key="question2_title">Question 2 (Easy)</h3>
+            <p data-lang-key="question2_text">The following table shows the balance sheet of a bank ($ million):</p>
+            <div class="scroll-hint" data-lang-key="scroll_hint_right">Move right to view full table</div>
+            <div class="scroll-icon"></div>
+            <div class="table-responsive at-start" data-scroll-container="2">
+                <table id="Table2">
+                    <tr>
+                        <th data-lang-key="assets">Assets</th>
+                        <th data-lang-key="amount">($ million)</th>
+                        <th data-lang-key="liabilities">Liabilities</th>
+                        <th data-lang-key="amount">($ million)</th>
+                    </tr>
+                    <tr>
+                        <th data-lang-key="reserves">Reserves</th>
+                        <td id="Table2_R"></td>
+                        <th data-lang-key="deposits">Deposits</th>
+                        <td id="Table2_D"></td>
+                    </tr>
+                    <tr>
+                        <th data-lang-key="loans">Loans</th>
+                        <td id="Table2_L"></td>
+                        <th></th>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <p data-lang-key="question2_prompt1">Suppose the <b>excess reserve</b> was: $<span id="Q2_Text"></span> million.</p>
+            <p data-lang-key="question2_prompt2">What is the required reserve ratio?</p>
+            <div class="input-group">
+                <label for="Q2_student_ans" data-lang-key="answer_label">Answer (%):</label>
+                <input type="number" id="Q2_student_ans" min="1" max="100" step="0.1">
+                <span class="feedback" id="Checkans_Q2"></span>
+            </div>
+            <div class="error" id="Q2_error" data-lang-key="error_q2">Please enter a valid number between 1 and 100.</div>
+            <button onclick="generateQ2()" data-lang-key="new_question">New Question</button>
+        </div>
+
+        <div class="links">
+            <p><a href="https://outliersecon.github.io/Outliers-Economics/" data-lang-key="back_to_home">Back to Home | 返回首頁</a></p>
+            <p><a href="https://buymeacoffee.com/outliersecon" data-lang-key="buy_me_coffee">Buy Me a Coffee | 請我飲杯咖啡</a></p>
+        </div>
+    </div>
+
+    <script>
+const _0x2eabf0=_0x4f3e;(function(_0x5925de,_0x4be11b){const _0x59c5de=_0x4f3e,_0x192a9f=_0x5925de();while(!![]){try{const _0x46efa1=parseInt(_0x59c5de(0x13d))/0x1*(parseInt(_0x59c5de(0xfe))/0x2)+-parseInt(_0x59c5de(0x123))/0x3*(parseInt(_0x59c5de(0x126))/0x4)+-parseInt(_0x59c5de(0x153))/0x5*(parseInt(_0x59c5de(0xf5))/0x6)+parseInt(_0x59c5de(0x13a))/0x7*(-parseInt(_0x59c5de(0x139))/0x8)+-parseInt(_0x59c5de(0x156))/0x9*(-parseInt(_0x59c5de(0x14e))/0xa)+-parseInt(_0x59c5de(0x148))/0xb+parseInt(_0x59c5de(0x109))/0xc;if(_0x46efa1===_0x4be11b)break;else _0x192a9f['push'](_0x192a9f['shift']());}catch(_0x48df81){_0x192a9f['push'](_0x192a9f['shift']());}}}(_0xa2ec,0x394de));function _0x4f3e(_0x572678,_0x2bbe1e){const _0xa2ec0=_0xa2ec();return _0x4f3e=function(_0x4f3e71,_0xb04739){_0x4f3e71=_0x4f3e71-0xf4;let _0xc70cd1=_0xa2ec0[_0x4f3e71];return _0xc70cd1;},_0x4f3e(_0x572678,_0x2bbe1e);}const translations={'en':{'title':'Quiz:\x20Required\x20Reserve\x20Ratio','description':_0x2eabf0(0x11b),'question1_title':'Question\x201\x20(Easy)','question1_text':_0x2eabf0(0x131),'question1_prompt1':'Suppose\x20the\x20required\x20reserve\x20was:\x20','question1_prompt2':_0x2eabf0(0x108),'question2_title':'Question\x202\x20(Easy)','question2_text':_0x2eabf0(0x131),'question2_prompt1':_0x2eabf0(0x11e),'question2_prompt2':_0x2eabf0(0x108),'assets':_0x2eabf0(0x146),'amount':_0x2eabf0(0x117),'liabilities':'Liabilities','reserves':_0x2eabf0(0x12f),'deposits':_0x2eabf0(0x142),'loans':_0x2eabf0(0x107),'answer_label':_0x2eabf0(0x15a),'error_q1':'Please\x20enter\x20a\x20valid\x20number\x20between\x201\x20and\x20100.','error_q2':_0x2eabf0(0x12d),'new_question':_0x2eabf0(0x145),'back_to_home':'Back\x20to\x20Home\x20|\x20返回首頁','buy_me_coffee':'Buy\x20Me\x20a\x20Coffee\x20|\x20請我飲杯咖啡','toggle_language':_0x2eabf0(0x127),'correct':_0x2eabf0(0x13e),'incorrect':_0x2eabf0(0x149),'scroll_hint_right':_0x2eabf0(0x134),'scroll_hint_left':_0x2eabf0(0x14c)},'zh':{'title':_0x2eabf0(0x152),'description':_0x2eabf0(0x102),'question1_title':_0x2eabf0(0x137),'question1_text':_0x2eabf0(0x11f),'question1_prompt1':_0x2eabf0(0x115),'question1_prompt2':_0x2eabf0(0x122),'question2_title':_0x2eabf0(0x100),'question2_text':_0x2eabf0(0x11f),'question2_prompt1':_0x2eabf0(0xfb),'question2_prompt2':_0x2eabf0(0x122),'assets':'資產','amount':_0x2eabf0(0x120),'liabilities':'負債','reserves':'儲備','deposits':'存款','loans':'貸款','answer_label':_0x2eabf0(0xfc),'error_q1':_0x2eabf0(0x12c),'error_q2':_0x2eabf0(0x12c),'new_question':'新問題','back_to_home':_0x2eabf0(0x12a),'buy_me_coffee':_0x2eabf0(0x14f),'toggle_language':_0x2eabf0(0x130),'correct':_0x2eabf0(0x151),'incorrect':_0x2eabf0(0x147),'scroll_hint_right':_0x2eabf0(0x15d),'scroll_hint_left':'向左移動查看整個表格'}};let currentLanguage='en';const Q1={'D':0x0,'L':0x0,'R':0x0,'RRR':0x0,'ER':0x0,'RR':0x0,'answer':0x0},Q2={'D':0x0,'L':0x0,'R':0x0,'RRR':0x0,'ER':0x0,'RR':0x0,'answer':0x0},choices=[0xa,0xc,12.5,0xe,0xf,0x12,0x14,0x19,0x1c,0x1e,0x23,0x24,0x28,0x32];function updateLanguage(_0xb99277){const _0x1e7d8c=_0x2eabf0;currentLanguage=_0xb99277,document[_0x1e7d8c(0x12e)](_0x1e7d8c(0x119))[_0x1e7d8c(0x104)]('lang',_0xb99277==='en'?'en':_0x1e7d8c(0x11c)),document[_0x1e7d8c(0x12e)]('toggle-language')[_0x1e7d8c(0xf6)]=translations[_0xb99277]['toggle_language'],document[_0x1e7d8c(0x158)](_0x1e7d8c(0x150))[_0x1e7d8c(0xf9)](_0x9209d1=>{const _0x2a8d37=_0x1e7d8c,_0x54b610=_0x9209d1[_0x2a8d37(0x13c)](_0x2a8d37(0x15f));if(translations[_0xb99277][_0x54b610]){const _0x38ae9e=_0x9209d1['innerHTML'],_0x30d110=/<span[^>]*>.*?<\/span>/g,_0x40ec3d=_0x38ae9e[_0x2a8d37(0x10b)](_0x30d110)||[];let _0x4e0849=translations[_0xb99277][_0x54b610];if(_0x40ec3d[_0x2a8d37(0x161)]>0x0&&!_0x4e0849[_0x2a8d37(0x140)]('<span')){let _0x4c9c06=_0x4e0849;_0x40ec3d['forEach'](_0x794aaa=>{const _0x3c0863=_0x2a8d37;_0x794aaa[_0x3c0863(0x140)](_0x3c0863(0x135))||_0x794aaa[_0x3c0863(0x140)](_0x3c0863(0x113))?_0x4c9c06+=_0xb99277==='en'?_0x3c0863(0x111)+(_0x794aaa[_0x3c0863(0x140)](_0x3c0863(0x135))?_0x3c0863(0x135):_0x3c0863(0x113))+'\x22></span>\x20million.':'<span\x20id=\x22'+(_0x794aaa[_0x3c0863(0x140)](_0x3c0863(0x135))?_0x3c0863(0x135):_0x3c0863(0x113))+_0x3c0863(0x15c):_0x4c9c06+=_0x794aaa;}),_0x9209d1[_0x2a8d37(0xf8)]=_0x4c9c06;}else _0x9209d1[_0x2a8d37(0xf6)]=_0x4e0849;}}),document['getElementById'](_0x1e7d8c(0x135))[_0x1e7d8c(0xf6)]=Q1['RR'],document[_0x1e7d8c(0x12e)]('Q2_Text')[_0x1e7d8c(0xf6)]=Q2['ER'],updateFeedbackMessages(),updateScrollHints();}function updateFeedbackMessages(){const _0x126730=_0x2eabf0;for(let _0x21b4b8=0x1;_0x21b4b8<=0x2;_0x21b4b8++){const _0x5c3d4d=document[_0x126730(0x12e)]('Checkans_Q'+_0x21b4b8);if(_0x5c3d4d&&_0x5c3d4d[_0x126730(0xf6)]['trim']()!==''){if(_0x5c3d4d[_0x126730(0x110)][_0x126730(0x140)]('incorrect'))_0x5c3d4d['textContent']=translations[currentLanguage][_0x126730(0x13b)];else _0x5c3d4d[_0x126730(0xf6)]&&(_0x5c3d4d[_0x126730(0xf6)]=translations[currentLanguage]['correct']);}}}function updateScrollHints(){const _0x85986=_0x2eabf0;document['querySelectorAll']('[data-scroll-container]')[_0x85986(0xf9)](_0x4f0695=>{const _0x30ae27=_0x85986,_0x13659e=_0x4f0695['previousElementSibling'],_0x31eeaa=_0x13659e['previousElementSibling'];checkScrollPosition(_0x4f0695,_0x13659e,_0x31eeaa),!_0x4f0695[_0x30ae27(0x14d)]&&(_0x4f0695['addEventListener'](_0x30ae27(0x125),function(){checkScrollPosition(_0x4f0695,_0x13659e,_0x31eeaa);}),_0x4f0695[_0x30ae27(0x14d)]=!![]);});}function checkScrollPosition(_0x41717a,_0x26f7bb,_0x5d15b9){const _0x39971b=_0x2eabf0,_0x1a6d99=_0x41717a['scrollWidth']-_0x41717a[_0x39971b(0x116)],_0x5dc997=_0x41717a[_0x39971b(0xfa)],_0x2efd07=0x5;if(_0x1a6d99<=_0x2efd07){_0x5d15b9[_0x39971b(0x154)]['display']=window['innerWidth']<=0x300?_0x39971b(0x141):_0x39971b(0x141),_0x26f7bb[_0x39971b(0x154)][_0x39971b(0x144)]=_0x39971b(0x141),_0x41717a['classList'][_0x39971b(0x128)](_0x39971b(0x114),_0x39971b(0x132),_0x39971b(0x10a));return;}_0x26f7bb[_0x39971b(0x154)]['display']=_0x39971b(0x10c),_0x5d15b9['style'][_0x39971b(0x144)]=window['innerWidth']<=0x300?_0x39971b(0x15e):_0x39971b(0x141);if(_0x5dc997<=_0x2efd07)_0x26f7bb['classList']['add'](_0x39971b(0x114)),_0x26f7bb[_0x39971b(0x157)]['remove'](_0x39971b(0x132)),_0x41717a['classList'][_0x39971b(0x11d)]('at-start'),_0x41717a[_0x39971b(0x157)][_0x39971b(0x128)]('at-end','in-middle'),_0x5d15b9['setAttribute'](_0x39971b(0x15f),_0x39971b(0x105)),_0x5d15b9[_0x39971b(0xf6)]=translations[currentLanguage][_0x39971b(0x105)];else _0x1a6d99-_0x5dc997<=_0x2efd07?(_0x26f7bb[_0x39971b(0x157)][_0x39971b(0x11d)](_0x39971b(0x132)),_0x26f7bb['classList'][_0x39971b(0x128)]('at-start'),_0x41717a[_0x39971b(0x157)][_0x39971b(0x11d)]('at-end'),_0x41717a[_0x39971b(0x157)][_0x39971b(0x128)](_0x39971b(0x114),'in-middle'),_0x5d15b9['setAttribute']('data-lang-key','scroll_hint_left'),_0x5d15b9[_0x39971b(0xf6)]=translations[currentLanguage][_0x39971b(0x112)]):(_0x26f7bb[_0x39971b(0x157)][_0x39971b(0x128)](_0x39971b(0x114)),_0x26f7bb['classList'][_0x39971b(0x128)](_0x39971b(0x132)),_0x41717a['classList']['add'](_0x39971b(0x10a)),_0x41717a['classList'][_0x39971b(0x128)](_0x39971b(0x114),_0x39971b(0x132)),_0x5d15b9[_0x39971b(0x104)](_0x39971b(0x15f),_0x39971b(0x105)),_0x5d15b9['textContent']=translations[currentLanguage][_0x39971b(0x105)]);}function _0xa2ec(){const _0x145f1b=['本工具生成關於一個銀行系統的法定儲備比率的經濟學題目，並實時檢查答案。','Table1_D','setAttribute','scroll_hint_right','Table2_D','Loans','What\x20is\x20the\x20required\x20reserve\x20ratio?','13516344XwUxuN','in-middle','match','flex','Q1_error','Table1_R','[data-scroll-container=\x222\x22]','className','$<span\x20id=\x22','scroll_hint_left','Q2_Text','at-start','假設法定儲備為：','clientWidth','($\x20million)','querySelector','html-lang','random','This\x20tool\x20generates\x20economics\x20questions\x20on\x20the\x20required\x20reserve\x20ratio\x20for\x20a\x20banking\x20system\x20and\x20checks\x20answers\x20in\x20real-time.','zh-TW','add','Suppose\x20the\x20excess\x20reserve\x20was:\x20','下表顯示某銀行系統的資產負債表（百萬元）：','（百萬元）','floor','法定儲備比率是多少？','3jDRIqR','highlight-scroll','scroll','1492132MiLnIK','Switch\x20to\x20Traditional\x20Chinese','remove','addEventListener','返回首頁\x20|\x20Back\x20to\x20Home','feedback\x20incorrect','請輸入\x201\x20到\x20100\x20之間的數字。','Please\x20enter\x20a\x20valid\x20number\x20between\x201\x20and\x20100.','getElementById','Reserves','切換到英文','The\x20following\x20table\x20shows\x20the\x20balance\x20sheet\x20of\x20a\x20banking\x20system\x20($\x20million):','at-end','input','Move\x20right\x20to\x20view\x20full\x20table','Q1_Text','answer','第1題（簡單）','Q1_student_ans','8MOQHEO','2236969kvfUnd','incorrect','getAttribute','24085vHgPyN','Correct!','round','includes','none','Deposits','value','display','New\x20Question','Assets','錯誤。','4485646pzjlVa','Incorrect.','load','Checkans_Q1','Move\x20left\x20to\x20view\x20full\x20table','hasScrollListener','290amgkKU','請我飲杯咖啡\x20|\x20Buy\x20Me\x20a\x20Coffee','[data-lang-key]','正確！','測驗：法定儲備比率','10vfwzXl','style','Table1_L','43893GQYTAg','classList','querySelectorAll','feedback','Answer\x20(%):','click','\x22></span>\x20百萬元。','向右移動查看整個表格','block','data-lang-key','Q2_error','length','Q2_student_ans','toggle-language','1026408DiYBnx','textContent','RRR','innerHTML','forEach','scrollLeft','假設超額儲備為：','答案（%）：','correct','34WDCDbD','Checkans_Q2','第2題（簡單）','Table2_R'];_0xa2ec=function(){return _0x145f1b;};return _0xa2ec();}window['addEventListener'](_0x2eabf0(0x14a),function(){window['innerWidth']<=0x300&&document['querySelectorAll']('.table-responsive')['forEach'](_0x31a65c=>{const _0x2704e6=_0x4f3e;_0x31a65c['classList'][_0x2704e6(0x11d)](_0x2704e6(0x124)),setTimeout(()=>{const _0x1a0786=_0x2704e6;_0x31a65c[_0x1a0786(0x157)][_0x1a0786(0x128)]('highlight-scroll');},0x7d0);}),updateScrollHints();}),window[_0x2eabf0(0x129)]('resize',updateScrollHints);function generateQ1(){const _0x574293=_0x2eabf0;Q1[_0x574293(0x136)]=Math[_0x574293(0x121)](Math['random']()*choices['length']),Q1['RRR']=choices[Q1[_0x574293(0x136)]]/0x64;do{Q1['R']=Math['floor'](Math[_0x574293(0x11a)]()*0x32+0x1)*0xa;if([0.12,0.15,0.3][_0x574293(0x140)](Q1[_0x574293(0xf7)]))do{Q1['ER']=Math['floor'](Math['random']()*0xf+0x1)*0xa,Q1['RR']=Q1['R']-Q1['ER'];}while(Q1['RR']%0x3!==0x0);else{if([0.14,0.28,0.35]['includes'](Q1[_0x574293(0xf7)]))do{Q1['ER']=Math[_0x574293(0x121)](Math['random']()*0xf+0x1)*0xa,Q1['RR']=Q1['R']-Q1['ER'];}while(Q1['RR']%0x7!==0x0);else{if([0.18,0.36][_0x574293(0x140)](Q1[_0x574293(0xf7)]))do{Q1['ER']=Math[_0x574293(0x121)](Math[_0x574293(0x11a)]()*0xf+0x1)*0xa,Q1['RR']=Q1['R']-Q1['ER'];}while(Q1['RR']%0x9!==0x0);else Q1['ER']=Math[_0x574293(0x121)](Math[_0x574293(0x11a)]()*0xf+0x1)*0xa,Q1['RR']=Q1['R']-Q1['ER'];}}Q1['D']=Math[_0x574293(0x13f)](Q1['RR']/Q1[_0x574293(0xf7)]),Q1['L']=Q1['D']-Q1['R'];}while(Q1['ER']>=Q1['R']||Q1['L']<=0x0);renderQ1();}function renderQ1(){const _0x594194=_0x2eabf0;document[_0x594194(0x12e)](_0x594194(0x135))[_0x594194(0xf6)]=Q1['RR'],document[_0x594194(0x12e)](_0x594194(0x10e))[_0x594194(0xf6)]=Q1['R'],document[_0x594194(0x12e)](_0x594194(0x103))[_0x594194(0xf6)]=Q1['D'],document[_0x594194(0x12e)](_0x594194(0x155))[_0x594194(0xf6)]=Q1['L'],document[_0x594194(0x12e)]('Checkans_Q1')['textContent']='',document[_0x594194(0x12e)](_0x594194(0x10d))[_0x594194(0x154)][_0x594194(0x144)]='none',document['getElementById']('Q1_student_ans')['value']='',updateLanguage(currentLanguage);const _0x2910c6=document[_0x594194(0x118)]('[data-scroll-container=\x221\x22]');_0x2910c6[_0x594194(0xfa)]=0x0,updateScrollHints();}function checkQ1(){const _0x33727f=_0x2eabf0,_0x178cae=document[_0x33727f(0x12e)](_0x33727f(0x138))[_0x33727f(0x143)],_0x209578=document[_0x33727f(0x12e)](_0x33727f(0x10d)),_0x2ce4dd=document['getElementById'](_0x33727f(0x14b));if(_0x178cae===''||isNaN(_0x178cae)||_0x178cae<0x1||_0x178cae>0x64){_0x209578[_0x33727f(0x154)][_0x33727f(0x144)]=_0x33727f(0x15e),_0x2ce4dd['textContent']='';return;}_0x209578[_0x33727f(0x154)][_0x33727f(0x144)]='none';const _0x56b123=Number(_0x178cae)===choices[Q1[_0x33727f(0x136)]];_0x2ce4dd['textContent']=_0x56b123?translations[currentLanguage][_0x33727f(0xfd)]:translations[currentLanguage][_0x33727f(0x13b)],_0x2ce4dd[_0x33727f(0x110)]=_0x56b123?_0x33727f(0x159):'feedback\x20incorrect';}function generateQ2(){const _0x340bb1=_0x2eabf0;Q2['answer']=Math[_0x340bb1(0x121)](Math[_0x340bb1(0x11a)]()*choices[_0x340bb1(0x161)]),Q2[_0x340bb1(0xf7)]=choices[Q2[_0x340bb1(0x136)]]/0x64;do{Q2['R']=Math[_0x340bb1(0x121)](Math[_0x340bb1(0x11a)]()*0x32+0x1)*0xa;if([0.12,0.15,0.3]['includes'](Q2[_0x340bb1(0xf7)]))do{Q2['ER']=Math[_0x340bb1(0x121)](Math[_0x340bb1(0x11a)]()*0xf+0x1)*0xa,Q2['RR']=Q2['R']-Q2['ER'];}while(Q2['RR']%0x3!==0x0);else{if([0.14,0.28,0.35][_0x340bb1(0x140)](Q2['RRR']))do{Q2['ER']=Math[_0x340bb1(0x121)](Math['random']()*0xf+0x1)*0xa,Q2['RR']=Q2['R']-Q2['ER'];}while(Q2['RR']%0x7!==0x0);else{if([0.18,0.36][_0x340bb1(0x140)](Q2[_0x340bb1(0xf7)]))do{Q2['ER']=Math[_0x340bb1(0x121)](Math[_0x340bb1(0x11a)]()*0xf+0x1)*0xa,Q2['RR']=Q2['R']-Q2['ER'];}while(Q2['RR']%0x9!==0x0);else Q2['ER']=Math[_0x340bb1(0x121)](Math['random']()*0xf+0x1)*0xa,Q2['RR']=Q2['R']-Q2['ER'];}}Q2['D']=Math[_0x340bb1(0x13f)](Q2['RR']/Q2['RRR']),Q2['L']=Q2['D']-Q2['R'];}while(Q2['ER']>=Q2['R']||Q2['L']<=0x0);renderQ2();}function renderQ2(){const _0x26ffd3=_0x2eabf0;document[_0x26ffd3(0x12e)](_0x26ffd3(0x113))[_0x26ffd3(0xf6)]=Q2['ER'],document['getElementById'](_0x26ffd3(0x101))[_0x26ffd3(0xf6)]=Q2['R'],document[_0x26ffd3(0x12e)](_0x26ffd3(0x106))[_0x26ffd3(0xf6)]=Q2['D'],document[_0x26ffd3(0x12e)]('Table2_L')[_0x26ffd3(0xf6)]=Q2['L'],document[_0x26ffd3(0x12e)]('Checkans_Q2')[_0x26ffd3(0xf6)]='',document['getElementById'](_0x26ffd3(0x160))['style'][_0x26ffd3(0x144)]=_0x26ffd3(0x141),document[_0x26ffd3(0x12e)]('Q2_student_ans')['value']='',updateLanguage(currentLanguage);const _0x15c83b=document[_0x26ffd3(0x118)](_0x26ffd3(0x10f));_0x15c83b[_0x26ffd3(0xfa)]=0x0,updateScrollHints();}function checkQ2(){const _0x57534a=_0x2eabf0,_0x5b8cf9=document[_0x57534a(0x12e)]('Q2_student_ans')[_0x57534a(0x143)],_0x32be10=document[_0x57534a(0x12e)](_0x57534a(0x160)),_0x23ac37=document[_0x57534a(0x12e)](_0x57534a(0xff));if(_0x5b8cf9===''||isNaN(_0x5b8cf9)||_0x5b8cf9<0x1||_0x5b8cf9>0x64){_0x32be10['style'][_0x57534a(0x144)]=_0x57534a(0x15e),_0x23ac37['textContent']='';return;}_0x32be10[_0x57534a(0x154)][_0x57534a(0x144)]=_0x57534a(0x141);const _0x548f45=Number(_0x5b8cf9)===choices[Q2['answer']];_0x23ac37['textContent']=_0x548f45?translations[currentLanguage][_0x57534a(0xfd)]:translations[currentLanguage][_0x57534a(0x13b)],_0x23ac37[_0x57534a(0x110)]=_0x548f45?_0x57534a(0x159):_0x57534a(0x12b);}document[_0x2eabf0(0x12e)]('Q1_student_ans')['addEventListener']('input',checkQ1),document['getElementById'](_0x2eabf0(0x162))['addEventListener'](_0x2eabf0(0x133),checkQ2),document[_0x2eabf0(0x12e)](_0x2eabf0(0xf4))[_0x2eabf0(0x129)](_0x2eabf0(0x15b),()=>{const _0x55ceaa=currentLanguage==='en'?'zh':'en';updateLanguage(_0x55ceaa);}),generateQ1(),generateQ2(),updateLanguage('en');
+    </script>
+</body>
+</html>
