@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Theory Simulator with MinMax Strategy</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f4f7fa;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, color 0.3s;
+      position: relative;
+    }
+
+    body.dark-mode .container {
+      background-color: #2c2c2c;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    body.dark-mode h2 {
+      color: #e0e0e0;
+    }
+
+    p {
+      text-align: center;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    body.dark-mode p {
+      color: #adb5bd;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      width: 180px;
+      font-weight: 500;
+      color: #444;
+    }
+
+    body.dark-mode label {
+      color: #e0e0e0;
+    }
+
+    select, input[type="number"] {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode select, body.dark-mode input[type="number"] {
+      background-color: #3a3a3a;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    select:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .error {
+      color: #dc3545;
+      font-size: 14px;
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      color: #fff;
+      background-color: #007bff;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #dark-mode-toggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #6c757d;
+      padding: 8px;
+      font-size: 14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    #dark-mode-toggle:hover {
+      background-color: #5a6268;
+      transform: scale(1.1);
+    }
+
+    body.dark-mode #dark-mode-toggle {
+      background-color: #adb5bd;
+    }
+
+    body.dark-mode #dark-mode-toggle:hover {
+      background-color: #8f9ba6;
+    }
+
+    #result {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f8f9fa;
+      margin: 20px 0;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 18px;
+      text-align: center;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode #result {
+      background-color: #3a3a3a;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    .payoff-matrix {
+      margin-top: 30px;
+      padding: 20px;
+      border-top: 2px solid #eee;
+      transition: border-color 0.3s;
+    }
+
+    body.dark-mode .payoff-matrix {
+      border-color: #555;
+    }
+
+    .payoff-matrix h3 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    body.dark-mode .payoff-matrix h3 {
+      color: #e0e0e0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: #f1f3f5;
+      transition: background-color 0.3s;
+    }
+
+    body.dark-mode table {
+      background-color: #3a3a3a;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+      transition: border-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode th, body.dark-mode td {
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    th {
+      background-color: #e9ecef;
+      font-weight: bold;
+    }
+
+    body.dark-mode th {
+      background-color: #4a4a4a;
+    }
+
+    .highlight {
+      background-color: #d1e7ff;
+    }
+
+    body.dark-mode .highlight {
+      background-color: #4a6b8f;
+    }
+
+    .nash-info {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+      text-align: left;
+    }
+
+    body.dark-mode .nash-info {
+      color: #adb5bd;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        margin: 20px auto;
+        padding: 10px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      button {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+
+      #dark-mode-toggle {
+        padding: 6px;
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+      }
+
+      table {
+        font-size: 14px;
+      }
+
+      label {
+        width: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Prisoner's Dilemma Simulator</h2>
+    <button id="dark-mode-toggle">☾</button>
+    <p>
+      Simulate the Prisoner's Dilemma with different strategy types. Choose a strategy type and provide inputs as needed.
+    </p>
+    <div class="input-group">
+      <label for="strategy-type">Strategy Type:</label>
+      <select id="strategy-type">
+        <option value="pure">Pure Strategy</option>
+        <option value="mixed">Mixed Strategy</option>
+        <option value="random">Random Strategy</option>
+        <option value="minmax">MinMax Strategy</option>
+      </select>
+    </div>
+    <div id="pure-inputs">
+      <div class="input-group">
+        <label for="player1-pure">Player 1 Strategy:</label>
+        <select id="player1-pure">
+          <option value="cooperate">Cooperate</option>
+          <option value="defect">Defect</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="player2-pure">Player 2 Strategy:</label>
+        <select id="player2-pure">
+          <option value="cooperate">Cooperate</option>
+          <option value="defect">Defect</option>
+        </select>
+      </div>
+    </div>
+    <div id="mixed-inputs" style="display: none;">
+      <div class="input-group">
+        <label for="player1-prob">Player 1 P(Cooperate):</label>
+        <input type="number" id="player1-prob" min="0" max="1" step="0.01" value="0.5">
+      </div>
+      <div class="input-group">
+        <label for="player2-prob">Player 2 P(Cooperate):</label>
+        <input type="number" id="player2-prob" min="0" max="1" step="0.01" value="0.5">
+      </div>
+    </div>
+    <div id="random-inputs" style="display: none;">
+      <p>No inputs required. Strategies will be randomly assigned.</p>
+    </div>
+    <div id="minmax-inputs" style="display: none;">
+      <p>No inputs required. MinMax strategy selects Defect for both players to minimize maximum loss.</p>
+    </div>
+    <div id="error" class="error"></div>
+    <div class="button-group" id="button-group">
+      <button id="simulate-btn">Simulate</button>
+    </div>
+    <div id="result"></div>
+
+    <div class="payoff-matrix">
+      <h3>Payoff Matrix (Years in Prison)</h3>
+      <table>
+        <tr>
+          <th></th>
+          <th>Player 2: Cooperate</th>
+          <th>Player 2: Defect</th>
+        </tr>
+        <tr>
+          <th>Player 1: Cooperate</th>
+          <td id="cc">(-1, -1)</td>
+          <td id="cd">(-3, 0)</td>
+        </tr>
+        <tr>
+          <th>Player 1: Defect</th>
+          <td id="dc">(0, -3)</td>
+          <td id="dd">(-2, -2)</td>
+        </tr>
+      </table>
+      <p>Note: Payoffs are shown as (Player 1, Player 2). Negative values represent years in prison.</p>
+      <div class="nash-info">
+        <strong>Nash Equilibrium:</strong><br>
+        Pure Strategy: Both players Defect (P(Cooperate) = 0%)<br>
+        Payoff: (-2, -2) years<br>
+        Mixed Strategy: No mixed strategy equilibrium exists other than both Defecting (P(Cooperate) = 0%)<br>
+        Explanation: In this Prisoner's Dilemma, Defect is a dominant strategy for both players, leading to a unique Nash equilibrium where both choose Defect.
+      </div>
+    </div>
+  </div>
+
+  <script>
+const _0x3ac388=_0x5593;function _0x5593(_0x5e8820,_0x3c1a62){const _0x15bdea=_0x15bd();return _0x5593=function(_0x559311,_0x4368c2){_0x559311=_0x559311-0xfe;let _0x32ba4c=_0x15bdea[_0x559311];return _0x32ba4c;},_0x5593(_0x5e8820,_0x3c1a62);}(function(_0x3c25d0,_0xa433b1){const _0x354f73=_0x5593,_0x4464d8=_0x3c25d0();while(!![]){try{const _0x185bed=-parseInt(_0x354f73(0x128))/0x1+-parseInt(_0x354f73(0x123))/0x2*(-parseInt(_0x354f73(0x11a))/0x3)+parseInt(_0x354f73(0x126))/0x4*(-parseInt(_0x354f73(0x124))/0x5)+-parseInt(_0x354f73(0x130))/0x6*(parseInt(_0x354f73(0x12e))/0x7)+-parseInt(_0x354f73(0x114))/0x8*(-parseInt(_0x354f73(0x111))/0x9)+parseInt(_0x354f73(0x120))/0xa+parseInt(_0x354f73(0x10c))/0xb*(parseInt(_0x354f73(0x117))/0xc);if(_0x185bed===_0xa433b1)break;else _0x4464d8['push'](_0x4464d8['shift']());}catch(_0x1823f7){_0x4464d8['push'](_0x4464d8['shift']());}}}(_0x15bd,0x31268));const payoffs={'cc':[-0x1,-0x1],'cd':[-0x3,0x0],'dc':[0x0,-0x3],'dd':[-0x2,-0x2]};function _0x15bd(){const _0x94b277=['minmax-inputs','mixed-inputs','pure-inputs','error','10593ukZgIr','display','remove','888dCyBsA','strategy-type','mixed','211212HRZyuU','dark-mode','\x20years</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Player\x202\x20Expected\x20Payoff:\x20','123945bgxegg','block','body','value','player1-pure','cooperate','377760FAwIfr','player2-prob','Please\x20enter\x20valid\x20probabilities\x20between\x200\x20and\x201.','6gpRKyb','1250955gczCvK','classList','4iHrQVI','result','313702xpugkE','player1-prob','pure','toggle','):\x20','player2-pure','14rnninJ','getElementById','218358YSqShO','%)</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Player\x202\x20Random\x20Strategy:\x20Cooperate\x20(','\x20years</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>MinMax\x20Strategy:\x20Both\x20players\x20Defect\x20to\x20minimize\x20their\x20maximum\x20possible\x20loss.</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','click','contains','\x20years</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Player\x201\x20Strategy:\x20Cooperate\x20(','add','innerHTML','\x20years</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Player\x201\x20Random\x20Strategy:\x20Cooperate\x20(','style','\x20years</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Player\x202\x20(','minmax','random','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Player\x201\x20(Defect):\x20','textContent','highlight','simulate-btn','%)</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','toFixed','querySelectorAll','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Player\x201\x20Expected\x20Payoff:\x20','\x20years</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Player\x202\x20(Defect):\x20','%),\x20Defect\x20(','change','none','forEach','random-inputs','dark-mode-toggle','addEventListener','341sDbkSv'];_0x15bd=function(){return _0x94b277;};return _0x15bd();}function updateInputs(){const _0x2b77a7=_0x5593,_0x1371fe=document[_0x2b77a7(0x12f)](_0x2b77a7(0x115))[_0x2b77a7(0x11d)];document[_0x2b77a7(0x12f)](_0x2b77a7(0x10f))[_0x2b77a7(0x139)]['display']=_0x1371fe==='pure'?'block':_0x2b77a7(0x107),document[_0x2b77a7(0x12f)](_0x2b77a7(0x10e))[_0x2b77a7(0x139)][_0x2b77a7(0x112)]=_0x1371fe===_0x2b77a7(0x116)?'block':_0x2b77a7(0x107),document[_0x2b77a7(0x12f)](_0x2b77a7(0x109))['style'][_0x2b77a7(0x112)]=_0x1371fe===_0x2b77a7(0x13c)?_0x2b77a7(0x11b):_0x2b77a7(0x107),document[_0x2b77a7(0x12f)](_0x2b77a7(0x10d))[_0x2b77a7(0x139)][_0x2b77a7(0x112)]=_0x1371fe===_0x2b77a7(0x13b)?_0x2b77a7(0x11b):_0x2b77a7(0x107),document[_0x2b77a7(0x12f)]('button-group')[_0x2b77a7(0x139)][_0x2b77a7(0x112)]=_0x1371fe===_0x2b77a7(0x13c)?'block':_0x2b77a7(0x107),document[_0x2b77a7(0x12f)]('error')[_0x2b77a7(0x13e)]='',document[_0x2b77a7(0x12f)](_0x2b77a7(0x127))[_0x2b77a7(0x137)]='',simulateGame();}function simulateGame(){const _0x19c400=_0x5593,_0x141c0f=document['getElementById'](_0x19c400(0x115))[_0x19c400(0x11d)],_0xbd9312=document[_0x19c400(0x12f)](_0x19c400(0x110)),_0x221594=document[_0x19c400(0x12f)](_0x19c400(0x127));_0xbd9312[_0x19c400(0x13e)]='';let _0x5dffb3,_0x4dc8c1;if(_0x141c0f===_0x19c400(0x12a)){const _0x382875=document[_0x19c400(0x12f)](_0x19c400(0x11e))['value'],_0x204215=document[_0x19c400(0x12f)]('player2-pure')['value'];_0x5dffb3=_0x382875===_0x19c400(0x11f)?0x1:0x0,_0x4dc8c1=_0x204215===_0x19c400(0x11f)?0x1:0x0;const _0x1e3155=(_0x5dffb3===0x1?'c':'d')+(_0x4dc8c1===0x1?'c':'d'),_0x58db9d=payoffs[_0x1e3155];_0x221594['innerHTML']='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Player\x201\x20('+_0x382875+_0x19c400(0x12c)+_0x58db9d[0x0]+_0x19c400(0x13a)+_0x204215+'):\x20'+_0x58db9d[0x1]+'\x20years</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20',document[_0x19c400(0x102)]('td')['forEach'](_0x5296ba=>_0x5296ba[_0x19c400(0x125)]['remove'](_0x19c400(0xfe))),document[_0x19c400(0x12f)](_0x1e3155)['classList'][_0x19c400(0x136)](_0x19c400(0xfe));}else{if(_0x141c0f==='mixed'){const _0x7d3bac=parseFloat(document[_0x19c400(0x12f)]('player1-prob')[_0x19c400(0x11d)]),_0xe0db52=parseFloat(document[_0x19c400(0x12f)](_0x19c400(0x121))[_0x19c400(0x11d)]);if(isNaN(_0x7d3bac)||isNaN(_0xe0db52)||_0x7d3bac<0x0||_0x7d3bac>0x1||_0xe0db52<0x0||_0xe0db52>0x1){_0xbd9312[_0x19c400(0x13e)]=_0x19c400(0x122),_0x221594['innerHTML']='',document[_0x19c400(0x102)]('td')['forEach'](_0x555214=>_0x555214[_0x19c400(0x125)]['remove'](_0x19c400(0xfe)));return;}_0x5dffb3=_0x7d3bac,_0x4dc8c1=_0xe0db52;const _0x5a5ed7=0x1-_0x5dffb3,_0x283207=0x1-_0x4dc8c1,_0x588ade=_0x5dffb3*_0x4dc8c1*payoffs['cc'][0x0]+_0x5dffb3*_0x283207*payoffs['cd'][0x0]+_0x5a5ed7*_0x4dc8c1*payoffs['dc'][0x0]+_0x5a5ed7*_0x283207*payoffs['dd'][0x0],_0x695e55=_0x5dffb3*_0x4dc8c1*payoffs['cc'][0x1]+_0x5dffb3*_0x283207*payoffs['cd'][0x1]+_0x5a5ed7*_0x4dc8c1*payoffs['dc'][0x1]+_0x5a5ed7*_0x283207*payoffs['dd'][0x1];_0x221594[_0x19c400(0x137)]=_0x19c400(0x103)+_0x588ade[_0x19c400(0x101)](0x2)+_0x19c400(0x119)+_0x695e55[_0x19c400(0x101)](0x2)+_0x19c400(0x135)+(_0x5dffb3*0x64)['toFixed'](0x0)+_0x19c400(0x105)+((0x1-_0x5dffb3)*0x64)[_0x19c400(0x101)](0x0)+'%)</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Player\x202\x20Strategy:\x20Cooperate\x20('+(_0x4dc8c1*0x64)[_0x19c400(0x101)](0x0)+_0x19c400(0x105)+((0x1-_0x4dc8c1)*0x64)[_0x19c400(0x101)](0x0)+_0x19c400(0x100),document[_0x19c400(0x102)]('td')[_0x19c400(0x108)](_0x176c64=>_0x176c64[_0x19c400(0x125)][_0x19c400(0x113)](_0x19c400(0xfe)));}else{if(_0x141c0f===_0x19c400(0x13c)){_0x5dffb3=Math[_0x19c400(0x13c)](),_0x4dc8c1=Math[_0x19c400(0x13c)]();const _0xaaf0b5=0x1-_0x5dffb3,_0x3d9400=0x1-_0x4dc8c1,_0x2e53b7=_0x5dffb3*_0x4dc8c1*payoffs['cc'][0x0]+_0x5dffb3*_0x3d9400*payoffs['cd'][0x0]+_0xaaf0b5*_0x4dc8c1*payoffs['dc'][0x0]+_0xaaf0b5*_0x3d9400*payoffs['dd'][0x0],_0x2c160c=_0x5dffb3*_0x4dc8c1*payoffs['cc'][0x1]+_0x5dffb3*_0x3d9400*payoffs['cd'][0x1]+_0xaaf0b5*_0x4dc8c1*payoffs['dc'][0x1]+_0xaaf0b5*_0x3d9400*payoffs['dd'][0x1];_0x221594['innerHTML']=_0x19c400(0x103)+_0x2e53b7[_0x19c400(0x101)](0x2)+_0x19c400(0x119)+_0x2c160c['toFixed'](0x2)+_0x19c400(0x138)+(_0x5dffb3*0x64)['toFixed'](0x0)+_0x19c400(0x105)+((0x1-_0x5dffb3)*0x64)[_0x19c400(0x101)](0x0)+_0x19c400(0x131)+(_0x4dc8c1*0x64)['toFixed'](0x0)+_0x19c400(0x105)+((0x1-_0x4dc8c1)*0x64)[_0x19c400(0x101)](0x0)+_0x19c400(0x100),document[_0x19c400(0x102)]('td')['forEach'](_0x77f18c=>_0x77f18c[_0x19c400(0x125)]['remove'](_0x19c400(0xfe)));}else{if(_0x141c0f===_0x19c400(0x13b)){_0x5dffb3=0x0,_0x4dc8c1=0x0;const _0x5c55b7=payoffs['dd'];_0x221594['innerHTML']=_0x19c400(0x13d)+_0x5c55b7[0x0]+_0x19c400(0x104)+_0x5c55b7[0x1]+_0x19c400(0x132),document[_0x19c400(0x102)]('td')[_0x19c400(0x108)](_0x168365=>_0x168365['classList']['remove']('highlight')),document[_0x19c400(0x12f)]('dd')[_0x19c400(0x125)]['add'](_0x19c400(0xfe));}}}}}function toggleDarkMode(){const _0xed3d7c=_0x5593;document[_0xed3d7c(0x11c)]['classList'][_0xed3d7c(0x12b)](_0xed3d7c(0x118));const _0x49bcc8=document['getElementById'](_0xed3d7c(0x10a));_0x49bcc8[_0xed3d7c(0x13e)]=document[_0xed3d7c(0x11c)][_0xed3d7c(0x125)][_0xed3d7c(0x134)](_0xed3d7c(0x118))?'☀':'☾';}document[_0x3ac388(0x12f)](_0x3ac388(0x115))['addEventListener'](_0x3ac388(0x106),updateInputs),document[_0x3ac388(0x12f)](_0x3ac388(0x11e))[_0x3ac388(0x10b)](_0x3ac388(0x106),simulateGame),document[_0x3ac388(0x12f)](_0x3ac388(0x12d))[_0x3ac388(0x10b)](_0x3ac388(0x106),simulateGame),document[_0x3ac388(0x12f)](_0x3ac388(0x129))[_0x3ac388(0x10b)](_0x3ac388(0x106),simulateGame),document['getElementById'](_0x3ac388(0x121))[_0x3ac388(0x10b)](_0x3ac388(0x106),simulateGame),document[_0x3ac388(0x12f)]('dark-mode-toggle')[_0x3ac388(0x10b)](_0x3ac388(0x133),toggleDarkMode),document[_0x3ac388(0x12f)](_0x3ac388(0xff))[_0x3ac388(0x10b)](_0x3ac388(0x133),simulateGame),updateInputs(),simulateGame();
+  </script>
+</body>
+</html>
