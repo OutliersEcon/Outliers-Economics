@@ -6,7 +6,10 @@
 - [Price Elasticity Calculator (需求價格彈性計算器)](Calculator/PriceElasticityCalculator_public)
 - [GDP Deflator Calculator (平減物價指數計算器)](Calculator/GDPDeflatorCalculator_public)
 - [Production Possibility Frontier (生產可能線)](Calculator/PPFBasic_public)
+
+## University Economics 大學經濟學
 - [Prisoner's Dilemma Simulator (囚徒困境模擬器)](Calculator/PrisonersDilemmaSimulator_public)
+- [Cobb-Douglas Utility Simulator (Cobb-Douglas 功用函數模擬器)](Cobb-Douglas%20utility%20function_public)
 
 ## Quiz 測驗
 - [Profit Maximization (利潤極大化)](Quiz/ProfitMaximization_public.html)
