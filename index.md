@@ -9,7 +9,7 @@
 
 ## University Economics 大學經濟學
 - [Prisoner's Dilemma Simulator (囚徒困境模擬器)](Calculator/PrisonersDilemmaSimulator_public)
-- [Cobb-Douglas Utility Simulator (Cobb-Douglas 功用函數模擬器)](Cobb-Douglas%20utility%20function_public)
+- [Cobb-Douglas Utility Simulator (Cobb-Douglas 功用函數模擬器)](Calculator/Cobb-Douglas%20utility%20function_public)
 
 ## Quiz 測驗
 - [Profit Maximization (利潤極大化)](Quiz/ProfitMaximization_public.html)
