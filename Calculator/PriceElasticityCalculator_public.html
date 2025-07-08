@@ -1,92 +1,217 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Price Elasticity of Demand Calculator | 需求價格彈性計算器</title>
     <style>
+        /* Global Styles */
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 600px;
+            background: #fff;
+            margin: 30px auto;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: background-color 0.3s;
+        }
+        body.dark-mode .container {
+            background-color: #2c2c2c;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         h1 {
-            color: #333;
             text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        body.dark-mode h1 {
+            color: #e0e0e0;
         }
         p {
+            text-align: center;
+            font-size: 0.95em;
             color: #555;
+            margin-bottom: 20px;
+        }
+        body.dark-mode p {
+            color: #adb5bd;
+        }
+        .input-group {
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
         }
         label {
-            margin-right: 10px;
             font-weight: bold;
             color: #444;
+            margin-bottom: 5px;
+        }
+        body.dark-mode label {
+            color: #e0e0e0;
         }
         input {
-            margin: 10px 0;
-            padding: 8px;
-            width: 200px;
+            padding: 10px;
+            font-size: 1em;
             border: 1px solid #ccc;
             border-radius: 4px;
+            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode input {
+            background-color: #3a3a3a;
+            border-color: #555;
+            color: #e0e0e0;
         }
         input:focus {
-            outline: none;
             border-color: #4CAF50;
+            outline: none;
         }
         #result {
             margin-top: 20px;
             padding: 15px;
-            background-color: #e8f5e9;
-            border: 1px solid #4CAF50;
-            border-radius: 5px;
+            border-radius: 8px;
             font-weight: bold;
-            color: #2e7d32;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
             display: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
+        /* Light mode success styling */
+        #result:not(.warning) {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        /* Light mode warning styling */
         .warning {
-            background-color: #fff3cd;
-            border: 1px solid #ffecb3;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
             color: #856404;
+            border: 1px solid #ffeaa7;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
+        /* Dark mode success styling */
+        body.dark-mode #result:not(.warning) {
+            background: linear-gradient(135deg, #0f2419 0%, #1a4c2e 100%);
+            border: 1px solid #28a745;
+            color: #75c98b;
+        }
+        /* Dark mode warning styling */
+        body.dark-mode #result.warning {
+            background: linear-gradient(135deg, #2d1f00 0%, #4a3c0a 100%);
+            border: 1px solid #ffc107;
+            color: #ffdb4d;
+        }
+        #dark-mode-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #6c757d;
+            padding: 8px;
+            font-size: 14px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.2s;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        #dark-mode-toggle:hover {
+            background-color: #5a6268;
+            transform: scale(1.1);
+        }
+        body.dark-mode #dark-mode-toggle {
+            background-color: #adb5bd;
+        }
+        body.dark-mode #dark-mode-toggle:hover {
+            background-color: #8f9ba6;
         }
         .links {
             margin-top: 20px;
             text-align: center;
         }
-        a {
-            color: #4CAF50;
+        .links a {
+            color: #007bff;
             text-decoration: none;
         }
-        a:hover {
+        body.dark-mode .links a {
+            color: #00b7eb;
+        }
+        .links a:hover {
             text-decoration: underline;
+        }
+        hr {
+            margin: 10px 0;
+            border: none;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        body.dark-mode hr {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            #dark-mode-toggle {
+                padding: 6px;
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Price Elasticity of Demand Calculator | 需求價格彈性計算器</h1>
+        <button id="dark-mode-toggle">☾</button>
         <p>Calculate the price elasticity of demand using the midpoint formula.<br>
         使用中點公式計算需求價格彈性。</p>
 
-        <label>Initial Quantity (初始數量):</label><br>
-        <input type="number" id="q1" placeholder="e.g., 100" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();"><br>
-        <label>New Quantity (新數量):</label><br>
-        <input type="number" id="q2" placeholder="e.g., 80" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();"><br>
-        <label>Initial Price (初始價格):</label><br>
-        <input type="number" id="p1" placeholder="e.g., 10" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();"><br>
-        <label>New Price (新價格):</label><br>
-        <input type="number" id="p2" placeholder="e.g., 12" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();"><br>
+        <div class="input-group">
+            <label for="q1">Initial Quantity (初始數量):</label>
+            <input type="number" id="q1" placeholder="e.g., 100" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();">
+        </div>
+        
+        <div class="input-group">
+            <label for="q2">New Quantity (新數量):</label>
+            <input type="number" id="q2" placeholder="e.g., 80" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();">
+        </div>
+        
+        <div class="input-group">
+            <label for="p1">Initial Price (初始價格):</label>
+            <input type="number" id="p1" placeholder="e.g., 10" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();">
+        </div>
+        
+        <div class="input-group">
+            <label for="p2">New Price (新價格):</label>
+            <input type="number" id="p2" placeholder="e.g., 12" min="0.01" step="0.01" oninput="restrictInput(this); calculateElasticity();">
+        </div>
 
         <div id="result"></div>
 
-<script src="https://outliersecon.github.io/Outliers-Economics/footer.js"></script>
+        <div class="links">
+            <p><a href="https://outliersecon.github.io/Outliers-Economics">Back to Home | 返回首頁</a></p>
+        </div>
+
+        <script src="https://outliersecon.github.io/Outliers-Economics/footer.js"></script>
     </div>
 
     <script>
-function _0x11cf(_0x1ecf66,_0x421b7a){const _0x3df299=_0x3df2();return _0x11cf=function(_0x11cf95,_0x1a0569){_0x11cf95=_0x11cf95-0x75;let _0x35f9c8=_0x3df299[_0x11cf95];return _0x35f9c8;},_0x11cf(_0x1ecf66,_0x421b7a);}(function(_0x63cbdc,_0x3481b7){const _0x28f1f6=_0x11cf,_0x588673=_0x63cbdc();while(!![]){try{const _0x43cf9b=parseInt(_0x28f1f6(0x78))/0x1*(-parseInt(_0x28f1f6(0x7b))/0x2)+-parseInt(_0x28f1f6(0x8e))/0x3*(-parseInt(_0x28f1f6(0x7e))/0x4)+parseInt(_0x28f1f6(0x90))/0x5+-parseInt(_0x28f1f6(0x94))/0x6*(-parseInt(_0x28f1f6(0x86))/0x7)+-parseInt(_0x28f1f6(0x75))/0x8*(parseInt(_0x28f1f6(0x77))/0x9)+-parseInt(_0x28f1f6(0x87))/0xa*(parseInt(_0x28f1f6(0x8f))/0xb)+-parseInt(_0x28f1f6(0x79))/0xc*(-parseInt(_0x28f1f6(0x7a))/0xd);if(_0x43cf9b===_0x3481b7)break;else _0x588673['push'](_0x588673['shift']());}catch(_0x54a791){_0x588673['push'](_0x588673['shift']());}}}(_0x3df2,0x96dd4));function restrictInput(_0x46209f){const _0x15b1e7=_0x11cf;_0x46209f[_0x15b1e7(0x7c)]<=0x0&&(_0x46209f[_0x15b1e7(0x7c)]='');}function calculateElasticity(){const _0x5f134e=_0x11cf,_0x4098bc=document[_0x5f134e(0x8b)]('result'),_0x32e4f3=parseFloat(document[_0x5f134e(0x8b)]('q1')[_0x5f134e(0x7c)]),_0x58844a=parseFloat(document[_0x5f134e(0x8b)]('q2')['value']),_0x26f405=parseFloat(document[_0x5f134e(0x8b)]('p1')[_0x5f134e(0x7c)]),_0x2707e2=parseFloat(document['getElementById']('p2')[_0x5f134e(0x7c)]);if(isNaN(_0x32e4f3)||isNaN(_0x58844a)||isNaN(_0x26f405)||isNaN(_0x2707e2)||_0x32e4f3<=0x0||_0x58844a<=0x0||_0x26f405<=0x0||_0x2707e2<=0x0){_0x4098bc[_0x5f134e(0x8a)][_0x5f134e(0x88)]='none';return;}const _0x265026=_0x32e4f3===_0x58844a,_0x2e64c9=_0x26f405===_0x2707e2;if(_0x265026&&_0x2e64c9){_0x4098bc[_0x5f134e(0x84)]=_0x5f134e(0x76),_0x4098bc[_0x5f134e(0x80)][_0x5f134e(0x8d)]('warning'),_0x4098bc[_0x5f134e(0x8a)][_0x5f134e(0x88)]=_0x5f134e(0x81);return;}else{if(_0x265026){_0x4098bc[_0x5f134e(0x84)]=_0x5f134e(0x85),_0x4098bc[_0x5f134e(0x80)][_0x5f134e(0x8d)](_0x5f134e(0x93)),_0x4098bc[_0x5f134e(0x8a)]['display']=_0x5f134e(0x81);return;}else{if(_0x2e64c9){_0x4098bc[_0x5f134e(0x84)]='Elasticity\x20|\x20彈性:\x20Perfectly\x20Elastic\x20(完全彈性)',_0x4098bc[_0x5f134e(0x80)][_0x5f134e(0x8d)](_0x5f134e(0x93)),_0x4098bc[_0x5f134e(0x8a)][_0x5f134e(0x88)]=_0x5f134e(0x81);return;}}}const _0x940bdf=_0x2707e2>_0x26f405,_0x2eb169=_0x58844a>_0x32e4f3,_0xa8e600=_0x2707e2<_0x26f405,_0x2afcaa=_0x58844a<_0x32e4f3,_0x1aedbb=_0x940bdf&&_0x2eb169||_0xa8e600&&_0x2afcaa,_0x378040=(_0x32e4f3-_0x58844a)/(_0x32e4f3+_0x58844a),_0x316fd0=(_0x26f405-_0x2707e2)/(_0x26f405+_0x2707e2),_0x65adbf=Math[_0x5f134e(0x89)](_0x378040/_0x316fd0);let _0x29fea6;if(_0x65adbf<0x1)_0x29fea6=_0x5f134e(0x83);else _0x65adbf===0x1?_0x29fea6=_0x5f134e(0x92):_0x29fea6='Elastic\x20(高彈性)';let _0x344e09=_0x5f134e(0x7d)+_0x65adbf[_0x5f134e(0x91)](0x2)+'\x20'+_0x29fea6;_0x1aedbb?(_0x344e09+=_0x5f134e(0x7f),_0x4098bc['classList'][_0x5f134e(0x8c)](_0x5f134e(0x93))):_0x4098bc[_0x5f134e(0x80)]['remove'](_0x5f134e(0x93)),_0x4098bc[_0x5f134e(0x82)]=_0x344e09,_0x4098bc[_0x5f134e(0x8a)]['display']='block';}function _0x3df2(){const _0x57469b=['remove','3YgfLvd','45364meqMIt','4016905dzTyxI','toFixed','Unitary\x20Elastic\x20(單一彈性)','warning','1170wJeOnH','308128yhXbfD','Elasticity\x20|\x20彈性:\x20Indeterminate\x20(不確定)','63tkhKPW','535547ZtfSvX','504DzvRiW','145847ULFWga','4YTHbik','value','Elasticity\x20|\x20彈性:\x20','935756NfXmhN','<hr>Warning\x20|\x20警告:\x20Price\x20and\x20quantity\x20are\x20positively\x20related,\x20which\x20implies\x20that\x20the\x20demand\x20curve\x20is\x20upward\x20sloping.\x20|\x20價格與數量呈正相關，這意味著需求曲線向上傾斜。','classList','block','innerHTML','Inelastic\x20(低彈性)','innerText','Elasticity\x20|\x20彈性:\x20Perfectly\x20Inelastic\x20(完全無彈性)','21784tvGMDe','380XtGOsY','display','abs','style','getElementById','add'];_0x3df2=function(){return _0x57469b;};return _0x3df2();}
+const _0x61ed0d=_0x5ef4;(function(_0x39c9d5,_0x2d4415){const _0x4624b2=_0x5ef4,_0x197bb0=_0x39c9d5();while(!![]){try{const _0x513249=-parseInt(_0x4624b2(0x7a))/0x1*(parseInt(_0x4624b2(0x9b))/0x2)+-parseInt(_0x4624b2(0x8d))/0x3+-parseInt(_0x4624b2(0x8a))/0x4*(parseInt(_0x4624b2(0x9c))/0x5)+parseInt(_0x4624b2(0x97))/0x6*(-parseInt(_0x4624b2(0x9d))/0x7)+-parseInt(_0x4624b2(0x7d))/0x8*(parseInt(_0x4624b2(0x9e))/0x9)+parseInt(_0x4624b2(0x91))/0xa+-parseInt(_0x4624b2(0x79))/0xb*(-parseInt(_0x4624b2(0x83))/0xc);if(_0x513249===_0x2d4415)break;else _0x197bb0['push'](_0x197bb0['shift']());}catch(_0x31e0ad){_0x197bb0['push'](_0x197bb0['shift']());}}}(_0x2ba0,0x573c9));function toggleDarkMode(){const _0x2a1053=_0x5ef4;document['body'][_0x2a1053(0x8c)][_0x2a1053(0x8b)](_0x2a1053(0x92));const _0x59a86a=document[_0x2a1053(0x86)](_0x2a1053(0x9a));_0x59a86a['textContent']=document['body'][_0x2a1053(0x8c)][_0x2a1053(0x7c)](_0x2a1053(0x92))?'☀':'☾';}function _0x5ef4(_0x2df4bd,_0x2c585e){const _0x2ba0a3=_0x2ba0();return _0x5ef4=function(_0x5ef40a,_0x128be6){_0x5ef40a=_0x5ef40a-0x79;let _0x56c756=_0x2ba0a3[_0x5ef40a];return _0x56c756;},_0x5ef4(_0x2df4bd,_0x2c585e);}function _0x2ba0(){const _0x5b28bc=['6611FqQLJY','182591XDRRkg','warning','contains','8HVLHJZ','Unitary\x20Elastic\x20(單一彈性)','block','<hr>Warning\x20|\x20警告:\x20Price\x20and\x20quantity\x20are\x20positively\x20related,\x20which\x20implies\x20that\x20the\x20demand\x20curve\x20is\x20upward\x20sloping.\x20|\x20價格與數量呈正相關，這意味著需求曲線向上傾斜。','Elasticity\x20|\x20彈性:\x20Perfectly\x20Elastic\x20(完全彈性)','Elasticity\x20|\x20彈性:\x20','28932uChPVk','value','click','getElementById','remove','display','addEventListener','2084fKUWEy','toggle','classList','321411DHRjPk','Elasticity\x20|\x20彈性:\x20Indeterminate\x20(不確定)','abs','Elastic\x20(高彈性)','6988820AUuKQE','dark-mode','toFixed','style','innerHTML','result','564ZUykIQ','add','innerText','dark-mode-toggle','2PPdFsK','2735AtWFvw','42665bkBdKM','5786343iRelzh'];_0x2ba0=function(){return _0x5b28bc;};return _0x2ba0();}function restrictInput(_0xdbca17){const _0x2cf51a=_0x5ef4;_0xdbca17[_0x2cf51a(0x84)]<=0x0&&(_0xdbca17[_0x2cf51a(0x84)]='');}function calculateElasticity(){const _0xb6ad26=_0x5ef4,_0x225295=document[_0xb6ad26(0x86)](_0xb6ad26(0x96)),_0x5c1401=parseFloat(document[_0xb6ad26(0x86)]('q1')[_0xb6ad26(0x84)]),_0x1f92db=parseFloat(document[_0xb6ad26(0x86)]('q2')[_0xb6ad26(0x84)]),_0x408c30=parseFloat(document[_0xb6ad26(0x86)]('p1')[_0xb6ad26(0x84)]),_0x2648f5=parseFloat(document['getElementById']('p2')[_0xb6ad26(0x84)]);if(isNaN(_0x5c1401)||isNaN(_0x1f92db)||isNaN(_0x408c30)||isNaN(_0x2648f5)||_0x5c1401<=0x0||_0x1f92db<=0x0||_0x408c30<=0x0||_0x2648f5<=0x0){_0x225295[_0xb6ad26(0x94)][_0xb6ad26(0x88)]='none';return;}const _0x75799a=_0x5c1401===_0x1f92db,_0x582c34=_0x408c30===_0x2648f5;if(_0x75799a&&_0x582c34){_0x225295[_0xb6ad26(0x99)]=_0xb6ad26(0x8e),_0x225295[_0xb6ad26(0x8c)]['remove'](_0xb6ad26(0x7b)),_0x225295[_0xb6ad26(0x94)][_0xb6ad26(0x88)]=_0xb6ad26(0x7f);return;}else{if(_0x75799a){_0x225295['innerText']='Elasticity\x20|\x20彈性:\x20Perfectly\x20Inelastic\x20(完全無彈性)',_0x225295[_0xb6ad26(0x8c)][_0xb6ad26(0x87)](_0xb6ad26(0x7b)),_0x225295[_0xb6ad26(0x94)][_0xb6ad26(0x88)]=_0xb6ad26(0x7f);return;}else{if(_0x582c34){_0x225295[_0xb6ad26(0x99)]=_0xb6ad26(0x81),_0x225295[_0xb6ad26(0x8c)]['remove'](_0xb6ad26(0x7b)),_0x225295[_0xb6ad26(0x94)][_0xb6ad26(0x88)]=_0xb6ad26(0x7f);return;}}}const _0x226b5e=_0x2648f5>_0x408c30,_0x5c3ea4=_0x1f92db>_0x5c1401,_0x407f53=_0x2648f5<_0x408c30,_0x3f4df3=_0x1f92db<_0x5c1401,_0x21b473=_0x226b5e&&_0x5c3ea4||_0x407f53&&_0x3f4df3,_0x1c3cfe=(_0x5c1401-_0x1f92db)/(_0x5c1401+_0x1f92db),_0x2e1f1a=(_0x408c30-_0x2648f5)/(_0x408c30+_0x2648f5),_0x245d34=Math[_0xb6ad26(0x8f)](_0x1c3cfe/_0x2e1f1a);let _0x138f5c;if(_0x245d34<0x1)_0x138f5c='Inelastic\x20(低彈性)';else _0x245d34===0x1?_0x138f5c=_0xb6ad26(0x7e):_0x138f5c=_0xb6ad26(0x90);let _0x2e3437=_0xb6ad26(0x82)+_0x245d34[_0xb6ad26(0x93)](0x2)+'\x20'+_0x138f5c;_0x21b473?(_0x2e3437+=_0xb6ad26(0x80),_0x225295[_0xb6ad26(0x8c)][_0xb6ad26(0x98)](_0xb6ad26(0x7b))):_0x225295[_0xb6ad26(0x8c)][_0xb6ad26(0x87)](_0xb6ad26(0x7b)),_0x225295[_0xb6ad26(0x95)]=_0x2e3437,_0x225295['style'][_0xb6ad26(0x88)]=_0xb6ad26(0x7f);}document[_0x61ed0d(0x86)](_0x61ed0d(0x9a))[_0x61ed0d(0x89)](_0x61ed0d(0x85),toggleDarkMode);
     </script>
 </body>
 </html>
