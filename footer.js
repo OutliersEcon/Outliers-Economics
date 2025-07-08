@@ -16,8 +16,8 @@ function loadFooter() {
     </footer>
   `;
   
-  // Find the container and append the footer
-  const container = document.querySelector('.container');
+  // Try to find container first, fallback to body
+  const container = document.querySelector('.container') || document.body;
   if (container) {
     container.insertAdjacentHTML('beforeend', footerHTML);
   }
