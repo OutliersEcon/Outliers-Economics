@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cobb-Douglas Utility Simulator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f4f7fa;
+      transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    body.dark-mode {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, color 0.3s;
+      position: relative;
+      flex: 1;
+      min-width: 300px;
+      max-width: 700px;
+    }
+
+    body.dark-mode .container {
+      background-color: #2c2c2c;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar {
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, color 0.3s;
+      flex: 1;
+      min-width: 300px;
+      max-width: 400px;
+    }
+
+    body.dark-mode .sidebar {
+      background-color: #2c2c2c;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    h2, h3 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    body.dark-mode h2, body.dark-mode h3 {
+      color: #e0e0e0;
+    }
+
+    p {
+      text-align: center;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    body.dark-mode p {
+      color: #adb5bd;
+    }
+
+    .sidebar p {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      width: 150px;
+      font-weight: 500;
+      color: #444;
+    }
+
+    body.dark-mode label {
+      color: #e0e0e0;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode input {
+      background-color: #3a3a3a;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    input:invalid {
+      border-color: #dc3545;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      color: #fff;
+    }
+
+    button:nth-child(1) {
+      background-color: #28a745;
+    }
+
+    button:nth-child(1):hover {
+      background-color: #218838;
+    }
+
+    button:nth-child(2) {
+      background-color: #dc3545;
+    }
+
+    button:nth-child(2):hover {
+      background-color: #c82333;
+    }
+
+    .zoom-button {
+      background-color: #6c757d;
+    }
+
+    .zoom-button:hover {
+      background-color: #5a6268;
+    }
+
+    #dark-mode-toggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #6c757d;
+      padding: 8px;
+      font-size: 14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    #dark-mode-toggle:hover {
+      background-color: #5a6268;
+      transform: scale(1.1);
+    }
+
+    body.dark-mode #dark-mode-toggle {
+      background-color: #adb5bd;
+    }
+
+    body.dark-mode #dark-mode-toggle:hover {
+      background-color: #8f9ba6;
+    }
+
+    #results {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f8f9fa;
+      margin: 20px 0;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 16px;
+      text-align: left;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode #results {
+      background-color: #3a3a3a;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 600px;
+      height: 400px;
+      margin: 20px auto;
+      display: block;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fff;
+      position: relative;
+    }
+
+    body.dark-mode canvas {
+      border-color: #555;
+      background-color: #2c2c2c;
+    }
+
+    .error {
+      color: #dc3545;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+      text-align: center;
+    }
+
+    body.dark-mode .error {
+      color: #ff6b6b;
+    }
+
+    #tooltip {
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      pointer-events: none;
+      display: none;
+      left: 60px;
+      top: 60px;
+    }
+
+    body.dark-mode #tooltip {
+      background-color: rgba(255, 255, 255, 0.8);
+      color: #333;
+    }
+
+    .math-formula {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #f1f3f5;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    body.dark-mode .math-formula {
+      background-color: #3a3a3a;
+      color: #e0e0e0;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        margin: 20px auto;
+        padding: 10px;
+        flex-direction: column;
+      }
+
+      .container, .sidebar {
+        max-width: 100%;
+      }
+
+      canvas {
+        height: 300px;
+      }
+
+      #tooltip {
+        left: 10px;
+        top: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container, .sidebar {
+        padding: 15px;
+      }
+
+      button {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+
+      #dark-mode-toggle {
+        padding: 6px;
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Cobb-Douglas Utility Simulator</h2>
+    <button id="dark-mode-toggle">☾</button>
+    <p>Explore utility maximization with a Cobb-Douglas utility function and budget constraint.</p>
+
+    <h3>Input Parameters</h3>
+    <div class="input-group">
+      <label for="income">Income (I):</label>
+      <input type="number" id="income" min="1" step="0.01" value="100" required>
+    </div>
+    <div class="input-group">
+      <label for="priceX">Price of Good X (Pₓ):</label>
+      <input type="number" id="priceX" min="0.1" step="0.01" value="2" required>
+    </div>
+    <div class="input-group">
+      <label for="priceY">Price of Good Y (Pᵧ):</label>
+      <input type="number" id="priceY" min="0.1" step="0.01" value="4" required>
+    </div>
+    <div class="input-group">
+      <label for="alpha">Alpha (α):</label>
+      <input type="number" id="alpha" min="0.01" max="0.99" step="0.01" value="0.5" required>
+    </div>
+
+    <div class="error" id="inputError">Please enter valid positive numbers (0 < α < 1).</div>
+    <div class="button-group">
+      <button onclick="simulate()">Simulate</button>
+      <button onclick="clearInput()">Clear</button>
+      <button class="zoom-button" onclick="zoomChart(0.833)">Zoom In</button>
+      <button class="zoom-button" onclick="zoomChart(1.2)">Zoom Out</button>
+      <button class="zoom-button" onclick="autoFitZoom()">Auto-Fit</button>
+    </div>
+
+    <canvas id="utilityChart"></canvas>
+    <div id="results"></div>
+    <div id="tooltip"></div>
+  </div>
+
+  <div class="sidebar">
+    <h3>About the Simulator</h3>
+    <p><strong>Cobb-Douglas Utility Function:</strong> Represents consumer preferences with the form:</p>
+    <div class="math-formula">
+      U(X, Y) = Xᵅ * Y⁽¹⁻ᵅ⁾
+    </div>
+    <p><strong>Budget Constraint:</strong> Limits consumption based on income and prices:</p>
+    <div class="math-formula">
+      I = PₓX + PᵧY
+    </div>
+    <p><strong>Utility Maximization:</strong> The consumer chooses quantities of Good X and Good Y to maximize utility subject to the budget constraint. The optimal point occurs where the indifference curve is tangent to the budget line, satisfying:</p>
+    <div class="math-formula">
+      MRS = Pₓ/Pᵧ, where MRS = (α/(1-α)) * (Y/X)
+    </div>
+    <p><strong>Optimal Quantities:</strong> Derived as:</p>
+    <div class="math-formula">
+      X* = (α * I) / Pₓ, Y* = ((1-α) * I) / Pᵧ
+    </div>
+    <p><strong>Budget Line:</strong> Shows all combinations of X and Y affordable with income I.</p>
+    <p><strong>Indifference Curve:</strong> Shows combinations of X and Y yielding the same utility level, tangent to the budget line at the optimal point.</p>
+    <p><strong>Inputs:</strong></p>
+    <ul>
+      <li><strong>Income (I):</strong> Total budget for consumption.</li>
+      <li><strong>Price of Good X (Pₓ):</strong> Price per unit of Good X.</li>
+      <li><strong>Price of Good Y (Pᵧ):</strong> Price per unit of Good Y.</li>
+      <li><strong>Alpha (α):</strong> Exponent in the utility function, between 0 and 1, representing preference for Good X.</li>
+    </ul>
+    <p><strong>Zoom:</strong> Use Zoom In/Out buttons to adjust the graph's viewable range. Auto-Fit adjusts to show the entire budget line and indifference curve.</p>
+    <p><strong>Tooltip:</strong> Hover over the graph to see coordinates at the top-left corner.</p>
+  </div>
+<script src="https://outliersecon.github.io/Outliers-Economics/footer.js"></script>
+  <script>
+const _0x5c8758=_0x55f5;(function(_0x575139,_0x4de184){const _0x21d9c7=_0x55f5,_0x5b48a4=_0x575139();while(!![]){try{const _0x182183=-parseInt(_0x21d9c7(0x127))/0x1*(-parseInt(_0x21d9c7(0x100))/0x2)+parseInt(_0x21d9c7(0x116))/0x3*(-parseInt(_0x21d9c7(0xfb))/0x4)+-parseInt(_0x21d9c7(0xf6))/0x5+-parseInt(_0x21d9c7(0x109))/0x6+parseInt(_0x21d9c7(0xf8))/0x7*(-parseInt(_0x21d9c7(0x119))/0x8)+parseInt(_0x21d9c7(0x11c))/0x9*(-parseInt(_0x21d9c7(0xf0))/0xa)+parseInt(_0x21d9c7(0x117))/0xb;if(_0x182183===_0x4de184)break;else _0x5b48a4['push'](_0x5b48a4['shift']());}catch(_0x5d63ea){_0x5b48a4['push'](_0x5b48a4['shift']());}}}(_0x3f6b,0xed0f0));function _0x55f5(_0x4fc277,_0x2201fe){const _0x3f6b37=_0x3f6b();return _0x55f5=function(_0x55f5ab,_0x1f959c){_0x55f5ab=_0x55f5ab-0xe2;let _0x4dad7a=_0x3f6b37[_0x55f5ab];return _0x4dad7a;},_0x55f5(_0x4fc277,_0x2201fe);}let chartData={'xValues':[],'yValues':[],'optimalX':0x0,'optimalY':0x0,'utility':0x0},zoom={'xMin':null,'xMax':null,'yMin':null,'yMax':null};function simulate(){const _0x189296=_0x55f5,_0x301f62=parseFloat(document[_0x189296(0x111)](_0x189296(0xe4))[_0x189296(0xeb)]),_0x3ca988=parseFloat(document['getElementById']('priceX')[_0x189296(0xeb)]),_0xbacdd5=parseFloat(document[_0x189296(0x111)](_0x189296(0x124))[_0x189296(0xeb)]),_0x194794=parseFloat(document[_0x189296(0x111)](_0x189296(0x131))[_0x189296(0xeb)]),_0xe03a22=document[_0x189296(0x111)](_0x189296(0xf5)),_0x375dbf=document[_0x189296(0x111)]('results');if(isNaN(_0x301f62)||_0x301f62<=0x0||isNaN(_0x3ca988)||_0x3ca988<=0x0||isNaN(_0xbacdd5)||_0xbacdd5<=0x0||isNaN(_0x194794)||_0x194794<=0x0||_0x194794>=0x1){_0xe03a22[_0x189296(0x10b)][_0x189296(0x103)]='block',_0x375dbf[_0x189296(0x12f)]='',clearCanvas(_0x189296(0x121)),chartData={'budgetPoints':[],'indifferencePoints':[],'optimalX':0x0,'optimalY':0x0,'utility':0x0},zoom={'xMin':null,'xMax':null,'yMin':null,'yMax':null};return;}else _0xe03a22['style']['display']='none';const _0x198350=_0x194794*_0x301f62/_0x3ca988,_0x3b0fa9=(0x1-_0x194794)*_0x301f62/_0xbacdd5,_0x5cdcc7=Math['pow'](_0x198350,_0x194794)*Math[_0x189296(0x112)](_0x3b0fa9,0x1-_0x194794);chartData=calculateCurves(_0x301f62,_0x3ca988,_0xbacdd5,_0x194794,_0x198350,_0x3b0fa9,_0x5cdcc7),chartData[_0x189296(0x129)]=_0x198350,chartData['optimalY']=_0x3b0fa9,chartData[_0x189296(0x11f)]=_0x5cdcc7,!zoom[_0x189296(0xea)]&&(zoom={'xMin':0x0,'xMax':_0x301f62/_0x3ca988*1.5,'yMin':0x0,'yMax':_0x301f62/_0xbacdd5*1.5}),drawChart(chartData,_0x301f62,_0x3ca988,_0xbacdd5),_0x375dbf[_0x189296(0x12f)]=_0x189296(0xf4)+_0x198350['toFixed'](0x2)+'\x0a'+('Optimal\x20Good\x20Y:\x20'+_0x3b0fa9[_0x189296(0x120)](0x2)+'\x0a')+(_0x189296(0xed)+_0x5cdcc7[_0x189296(0x120)](0x2));}function calculateCurves(_0x2bc878,_0x438f15,_0x4552ca,_0x19b0de,_0x4526c4,_0x4a89f1,_0x3ea9a1){const _0x48e460=_0x55f5,_0x11f793=[],_0x9a080c=[],_0x22ac47=0x64,_0x4ba7c0=_0x2bc878/_0x438f15,_0x386b3d=[];for(let _0x4cd621=0x0;_0x4cd621<=_0x22ac47;_0x4cd621++){const _0x184571=_0x4cd621/_0x22ac47*_0x4ba7c0,_0x4ca4c5=(_0x2bc878-_0x438f15*_0x184571)/_0x4552ca;_0x386b3d[_0x48e460(0x102)]({'x':_0x184571,'y':_0x4ca4c5});}const _0x3a0bf4=[];for(let _0xe91dc7=0x0;_0xe91dc7<=_0x22ac47;_0xe91dc7++){const _0x20dfde=_0xe91dc7/_0x22ac47*_0x4ba7c0;if(_0x20dfde===0x0)continue;const _0x2ac480=Math[_0x48e460(0x112)](_0x3ea9a1/Math[_0x48e460(0x112)](_0x20dfde,_0x19b0de),0x1/(0x1-_0x19b0de));_0x3a0bf4[_0x48e460(0x102)]({'x':_0x20dfde,'y':_0x2ac480});}return{'budgetPoints':_0x386b3d,'indifferencePoints':_0x3a0bf4,'optimalX':_0x4526c4,'optimalY':_0x4a89f1,'utility':_0x3ea9a1};}function _0x3f6b(){const _0x5a8126=['clientY','width','indifferencePoints','contains','40eCTSEE','tooltip','push','display','yMax','body','xMin','Good\x20Y','input','6708762KtwFlz','moveTo','style','optimalY','offsetHeight','addEventListener','dark-mode-toggle','yMin','getElementById','pow','mouseleave','lineTo','strokeStyle','225543EuGBsQ','49525916CzNLxQ','Budget\x20Line','8fRVmOX','left','stroke','356868edaDWr','classList','hypot','utility','toFixed','utilityChart','Optimal\x20Point','height','priceY','click',',\x20Y\x20=\x20','84479LDndtU','#28a745','optimalX','font','beginPath','fillText','textAlign','priceX','textContent','right','alpha','12px\x20Segoe\x20UI','fillStyle','income','clearRect','Indifference\x20Curve','#e0e0e0','fill','top','xMax','value','max','Utility\x20Level:\x20','100','arc','110kEROzV','mousemove','dark-mode','#333','Optimal\x20Good\x20X:\x20','inputError','8046940UgDbIB','budgetPoints','9664396gXEMau','getBoundingClientRect','none','36duBdHL'];_0x3f6b=function(){return _0x5a8126;};return _0x3f6b();}function drawChart(_0x4cffdd,_0x5103ba,_0x3b8966,_0x4f0a4d){const _0x28d424=_0x55f5,_0xc5435e=document[_0x28d424(0x111)](_0x28d424(0x121)),_0x4cc87a=_0xc5435e['getContext']('2d');_0x4cc87a[_0x28d424(0xe5)](0x0,0x0,_0xc5435e[_0x28d424(0xfd)],_0xc5435e['height']),_0xc5435e[_0x28d424(0xfd)]=_0xc5435e['offsetWidth'],_0xc5435e['height']=_0xc5435e[_0x28d424(0x10d)];const _0x3c900c=0x32,_0x116c60=zoom[_0x28d424(0x106)],_0x50328a=zoom['xMax'],_0x4064dc=zoom[_0x28d424(0x110)],_0x363fcd=zoom[_0x28d424(0x104)],_0x490156=_0xc5435e[_0x28d424(0xfd)]-0x2*_0x3c900c,_0x378015=_0xc5435e['height']-0x2*_0x3c900c;_0x4cc87a[_0x28d424(0x12b)](),_0x4cc87a[_0x28d424(0x10a)](_0x3c900c,_0x3c900c),_0x4cc87a[_0x28d424(0x114)](_0x3c900c,_0xc5435e[_0x28d424(0x123)]-_0x3c900c),_0x4cc87a[_0x28d424(0x114)](_0xc5435e[_0x28d424(0xfd)]-_0x3c900c,_0xc5435e[_0x28d424(0x123)]-_0x3c900c),_0x4cc87a[_0x28d424(0x115)]=document[_0x28d424(0x105)][_0x28d424(0x11d)][_0x28d424(0xff)](_0x28d424(0xf2))?_0x28d424(0xe7):_0x28d424(0xf3),_0x4cc87a[_0x28d424(0x11b)](),_0x4cc87a[_0x28d424(0xe3)]=document[_0x28d424(0x105)][_0x28d424(0x11d)][_0x28d424(0xff)]('dark-mode')?_0x28d424(0xe7):_0x28d424(0xf3),_0x4cc87a[_0x28d424(0x12a)]=_0x28d424(0xe2),_0x4cc87a[_0x28d424(0x12d)]='center',_0x4cc87a[_0x28d424(0x12c)]('Good\x20X',_0xc5435e['width']/0x2,_0xc5435e[_0x28d424(0x123)]-_0x3c900c+0x28),_0x4cc87a[_0x28d424(0x12d)]=_0x28d424(0x130),_0x4cc87a[_0x28d424(0x12c)](_0x28d424(0x107),_0x3c900c-0xa,_0x3c900c-0xa);for(let _0x3e33e2=0x0;_0x3e33e2<=0x5;_0x3e33e2++){const _0x1c25f9=_0x3c900c+_0x3e33e2/0x5*_0x490156,_0x16dcdf=_0xc5435e[_0x28d424(0x123)]-_0x3c900c-_0x3e33e2/0x5*_0x378015,_0x5d9101=_0x116c60+_0x3e33e2/0x5*(_0x50328a-_0x116c60),_0x5ce17c=_0x4064dc+_0x3e33e2/0x5*(_0x363fcd-_0x4064dc);_0x4cc87a[_0x28d424(0x12c)](_0x5d9101[_0x28d424(0x120)](0x1),_0x1c25f9,_0xc5435e[_0x28d424(0x123)]-_0x3c900c+0xf),_0x4cc87a['fillText'](_0x5ce17c[_0x28d424(0x120)](0x1),_0x3c900c-0xa,_0x16dcdf+0x5);}_0x4cc87a[_0x28d424(0x12b)]();let _0x5dd7ed=![];for(let _0xacab88 of _0x4cffdd[_0x28d424(0xf7)]){if(_0xacab88['x']<_0x116c60||_0xacab88['x']>_0x50328a||_0xacab88['y']<_0x4064dc||_0xacab88['y']>_0x363fcd)continue;const _0x22a102=_0x3c900c+(_0xacab88['x']-_0x116c60)/(_0x50328a-_0x116c60)*_0x490156,_0x27130d=_0xc5435e[_0x28d424(0x123)]-_0x3c900c-(_0xacab88['y']-_0x4064dc)/(_0x363fcd-_0x4064dc)*_0x378015;!_0x5dd7ed?(_0x4cc87a[_0x28d424(0x10a)](_0x22a102,_0x27130d),_0x5dd7ed=!![]):_0x4cc87a[_0x28d424(0x114)](_0x22a102,_0x27130d);}_0x4cc87a[_0x28d424(0x115)]='red',_0x4cc87a[_0x28d424(0x11b)](),_0x4cc87a[_0x28d424(0x12b)](),_0x5dd7ed=![];for(let _0x3706f4 of _0x4cffdd[_0x28d424(0xfe)]){if(_0x3706f4['x']<_0x116c60||_0x3706f4['x']>_0x50328a||_0x3706f4['y']<_0x4064dc||_0x3706f4['y']>_0x363fcd)continue;const _0x556fda=_0x3c900c+(_0x3706f4['x']-_0x116c60)/(_0x50328a-_0x116c60)*_0x490156,_0x2bd3ba=_0xc5435e['height']-_0x3c900c-(_0x3706f4['y']-_0x4064dc)/(_0x363fcd-_0x4064dc)*_0x378015;!_0x5dd7ed?(_0x4cc87a[_0x28d424(0x10a)](_0x556fda,_0x2bd3ba),_0x5dd7ed=!![]):_0x4cc87a[_0x28d424(0x114)](_0x556fda,_0x2bd3ba);}_0x4cc87a[_0x28d424(0x115)]=_0x28d424(0x128),_0x4cc87a['stroke']();const _0x40bdf6=_0x3c900c+(_0x4cffdd[_0x28d424(0x129)]-_0x116c60)/(_0x50328a-_0x116c60)*_0x490156,_0x19fc60=_0xc5435e[_0x28d424(0x123)]-_0x3c900c-(_0x4cffdd['optimalY']-_0x4064dc)/(_0x363fcd-_0x4064dc)*_0x378015;_0x4cffdd['optimalX']>=_0x116c60&&_0x4cffdd['optimalX']<=_0x50328a&&_0x4cffdd[_0x28d424(0x10c)]>=_0x4064dc&&_0x4cffdd['optimalY']<=_0x363fcd&&(_0x4cc87a[_0x28d424(0x12b)](),_0x4cc87a[_0x28d424(0xef)](_0x40bdf6,_0x19fc60,0x5,0x0,0x2*Math['PI']),_0x4cc87a[_0x28d424(0xe3)]='blue',_0x4cc87a[_0x28d424(0xe8)]());}function zoomChart(_0x325348){const _0x4aa6a3=_0x55f5,_0x5a4746=zoom[_0x4aa6a3(0xea)]-zoom[_0x4aa6a3(0x106)],_0x2b8193=zoom['yMax']-zoom['yMin'],_0x12d1af=(zoom[_0x4aa6a3(0x106)]+zoom['xMax'])/0x2,_0x45a3a2=(zoom[_0x4aa6a3(0x110)]+zoom[_0x4aa6a3(0x104)])/0x2,_0x4952fe=_0x5a4746*_0x325348,_0x3dfa79=_0x2b8193*_0x325348;zoom[_0x4aa6a3(0x106)]=Math[_0x4aa6a3(0xec)](0x0,_0x12d1af-_0x4952fe/0x2),zoom[_0x4aa6a3(0xea)]=_0x12d1af+_0x4952fe/0x2,zoom[_0x4aa6a3(0x110)]=Math[_0x4aa6a3(0xec)](0x0,_0x45a3a2-_0x3dfa79/0x2),zoom[_0x4aa6a3(0x104)]=_0x45a3a2+_0x3dfa79/0x2,drawChart(chartData,parseFloat(document[_0x4aa6a3(0x111)](_0x4aa6a3(0xe4))[_0x4aa6a3(0xeb)]),parseFloat(document[_0x4aa6a3(0x111)](_0x4aa6a3(0x12e))['value']),parseFloat(document[_0x4aa6a3(0x111)](_0x4aa6a3(0x124))[_0x4aa6a3(0xeb)]));}function autoFitZoom(){const _0x1ca582=_0x55f5,_0x5d527f=parseFloat(document['getElementById'](_0x1ca582(0xe4))[_0x1ca582(0xeb)]),_0x2e35de=parseFloat(document[_0x1ca582(0x111)](_0x1ca582(0x12e))[_0x1ca582(0xeb)]),_0x54abdc=parseFloat(document[_0x1ca582(0x111)](_0x1ca582(0x124))[_0x1ca582(0xeb)]),_0x2c552e=parseFloat(document[_0x1ca582(0x111)](_0x1ca582(0x131))[_0x1ca582(0xeb)]);if(isNaN(_0x5d527f)||_0x5d527f<=0x0||isNaN(_0x2e35de)||_0x2e35de<=0x0||isNaN(_0x54abdc)||_0x54abdc<=0x0||isNaN(_0x2c552e)||_0x2c552e<=0x0||_0x2c552e>=0x1)return;const _0x2830f6=_0x5d527f/_0x2e35de,_0x30962f=_0x5d527f/_0x54abdc,_0x30ff91=_0x2c552e*_0x5d527f/_0x2e35de,_0x9ffa3f=(0x1-_0x2c552e)*_0x5d527f/_0x54abdc,_0x982221=Math[_0x1ca582(0x112)](_0x30ff91,_0x2c552e)*Math['pow'](_0x9ffa3f,0x1-_0x2c552e),_0x1b7c96=_0x2830f6/0x2,_0x41032f=Math['pow'](_0x982221/Math[_0x1ca582(0x112)](_0x1b7c96,_0x2c552e),0x1/(0x1-_0x2c552e));zoom={'xMin':0x0,'xMax':_0x2830f6*1.2,'yMin':0x0,'yMax':Math[_0x1ca582(0xec)](_0x30962f,_0x41032f)*1.2},drawChart(chartData,_0x5d527f,_0x2e35de,_0x54abdc);}function clearInput(){const _0x13cdf1=_0x55f5;document[_0x13cdf1(0x111)](_0x13cdf1(0xe4))[_0x13cdf1(0xeb)]=_0x13cdf1(0xee),document[_0x13cdf1(0x111)](_0x13cdf1(0x12e))[_0x13cdf1(0xeb)]='2',document[_0x13cdf1(0x111)](_0x13cdf1(0x124))[_0x13cdf1(0xeb)]='4',document['getElementById'](_0x13cdf1(0x131))[_0x13cdf1(0xeb)]='0.5',document[_0x13cdf1(0x111)](_0x13cdf1(0xf5))[_0x13cdf1(0x10b)]['display']='none',document[_0x13cdf1(0x111)]('results')['textContent']='',clearCanvas(_0x13cdf1(0x121)),chartData={'budgetPoints':[],'indifferencePoints':[],'optimalX':0x0,'optimalY':0x0,'utility':0x0},zoom={'xMin':null,'xMax':null,'yMin':null,'yMax':null};}function clearCanvas(_0x17a548){const _0x5e7c46=_0x55f5,_0x248938=document[_0x5e7c46(0x111)](_0x17a548),_0x5e00cf=_0x248938['getContext']('2d');_0x5e00cf[_0x5e7c46(0xe5)](0x0,0x0,_0x248938[_0x5e7c46(0xfd)],_0x248938[_0x5e7c46(0x123)]),document[_0x5e7c46(0x111)](_0x5e7c46(0x101))[_0x5e7c46(0x10b)][_0x5e7c46(0x103)]='none';}function toggleDarkMode(){const _0x3e450e=_0x55f5;document[_0x3e450e(0x105)][_0x3e450e(0x11d)]['toggle'](_0x3e450e(0xf2));const _0x8a70e=document[_0x3e450e(0x111)]('dark-mode-toggle');_0x8a70e['textContent']=document[_0x3e450e(0x105)][_0x3e450e(0x11d)][_0x3e450e(0xff)](_0x3e450e(0xf2))?'☀':'☾',simulate();}function showTooltip(_0x33e1e4){const _0x3cda49=_0x55f5;if(!chartData[_0x3cda49(0xf7)]['length'])return;const _0x86437=document[_0x3cda49(0x111)](_0x3cda49(0x121)),_0x3ca61f=document[_0x3cda49(0x111)](_0x3cda49(0x101)),_0x3849b1=_0x86437[_0x3cda49(0xf9)](),_0x7ed91a=_0x33e1e4['clientX']-_0x3849b1[_0x3cda49(0x11a)],_0x6615cf=_0x33e1e4[_0x3cda49(0xfc)]-_0x3849b1[_0x3cda49(0xe9)],_0x5c41f3=0x32,_0x55e001=zoom['xMin'],_0x57b05d=zoom[_0x3cda49(0xea)],_0x4eafb7=zoom[_0x3cda49(0x110)],_0x58f7aa=zoom[_0x3cda49(0x104)],_0x59f348=_0x86437[_0x3cda49(0xfd)]-0x2*_0x5c41f3,_0x29f2a6=_0x86437[_0x3cda49(0x123)]-0x2*_0x5c41f3,_0x1f961f=_0x55e001+(_0x7ed91a-_0x5c41f3)/_0x59f348*(_0x57b05d-_0x55e001),_0x3253c9=_0x58f7aa-(_0x6615cf-_0x5c41f3)/_0x29f2a6*(_0x58f7aa-_0x4eafb7);let _0x4b53e9=Infinity,_0x5b4690=null,_0x438547='';for(let _0x4f1f8b of chartData[_0x3cda49(0xf7)]){const _0x527c71=_0x5c41f3+(_0x4f1f8b['x']-_0x55e001)/(_0x57b05d-_0x55e001)*_0x59f348,_0x93b6cd=_0x86437[_0x3cda49(0x123)]-_0x5c41f3-(_0x4f1f8b['y']-_0x4eafb7)/(_0x58f7aa-_0x4eafb7)*_0x29f2a6,_0x1c1b74=Math['hypot'](_0x527c71-_0x7ed91a,_0x93b6cd-_0x6615cf);_0x1c1b74<_0x4b53e9&&_0x1c1b74<0xa&&(_0x4b53e9=_0x1c1b74,_0x5b4690=_0x4f1f8b,_0x438547=_0x3cda49(0x118));}for(let _0xfdb46e of chartData[_0x3cda49(0xfe)]){const _0x43f486=_0x5c41f3+(_0xfdb46e['x']-_0x55e001)/(_0x57b05d-_0x55e001)*_0x59f348,_0x342aeb=_0x86437[_0x3cda49(0x123)]-_0x5c41f3-(_0xfdb46e['y']-_0x4eafb7)/(_0x58f7aa-_0x4eafb7)*_0x29f2a6,_0x21754b=Math[_0x3cda49(0x11e)](_0x43f486-_0x7ed91a,_0x342aeb-_0x6615cf);_0x21754b<_0x4b53e9&&_0x21754b<0xa&&(_0x4b53e9=_0x21754b,_0x5b4690=_0xfdb46e,_0x438547=_0x3cda49(0xe6));}const _0x153bd8=_0x5c41f3+(chartData[_0x3cda49(0x129)]-_0x55e001)/(_0x57b05d-_0x55e001)*_0x59f348,_0x11d741=_0x86437[_0x3cda49(0x123)]-_0x5c41f3-(chartData[_0x3cda49(0x10c)]-_0x4eafb7)/(_0x58f7aa-_0x4eafb7)*_0x29f2a6,_0x237420=Math['hypot'](_0x153bd8-_0x7ed91a,_0x11d741-_0x6615cf);_0x237420<_0x4b53e9&&_0x237420<0xa&&(_0x5b4690={'x':chartData[_0x3cda49(0x129)],'y':chartData[_0x3cda49(0x10c)]},_0x438547=_0x3cda49(0x122)),_0x5b4690?(_0x3ca61f[_0x3cda49(0x10b)]['display']='block',_0x3ca61f[_0x3cda49(0x12f)]=_0x438547+':\x20X\x20=\x20'+_0x5b4690['x'][_0x3cda49(0x120)](0x2)+_0x3cda49(0x126)+_0x5b4690['y']['toFixed'](0x2)):_0x3ca61f[_0x3cda49(0x10b)][_0x3cda49(0x103)]='none';}document[_0x5c8758(0x111)](_0x5c8758(0x10f))[_0x5c8758(0x10e)](_0x5c8758(0x125),toggleDarkMode),document['getElementById'](_0x5c8758(0xe4))['addEventListener']('input',simulate),document[_0x5c8758(0x111)]('priceX')[_0x5c8758(0x10e)](_0x5c8758(0x108),simulate),document['getElementById'](_0x5c8758(0x124))['addEventListener']('input',simulate),document[_0x5c8758(0x111)]('alpha')[_0x5c8758(0x10e)](_0x5c8758(0x108),simulate),document[_0x5c8758(0x111)](_0x5c8758(0x121))['addEventListener'](_0x5c8758(0xf1),showTooltip),document[_0x5c8758(0x111)](_0x5c8758(0x121))[_0x5c8758(0x10e)](_0x5c8758(0x113),()=>{const _0x147b5a=_0x5c8758;document[_0x147b5a(0x111)](_0x147b5a(0x101))[_0x147b5a(0x10b)]['display']=_0x147b5a(0xfa);}),simulate();
+  </script>
+</body>
+</html>
