@@ -1,7 +1,7 @@
 function loadFooter() {
   const footerHTML = `
     <hr style="border: none; height: 1px; background-color: #ddd; margin: 30px 0 20px 0;">
-    <footer style="text-align: center; margin-top: 20px; width: 100%;">
+    <footer style="text-align: center; width: 100%;">
       <p style="color: #555; font-size: 14px;">
         請支持我繼續創作和分享<br>
         <a href="https://buymeacoffee.com/outliersecon" target="_blank" style="color: #007bff; text-decoration: none; font-weight: 500;">
