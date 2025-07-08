@@ -10,6 +10,11 @@
       background-color: #f0f2f5;
       margin: 0;
       padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
     }
     .container {
       max-width: 600px;
@@ -18,17 +23,29 @@
       padding: 20px 30px;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      transition: background-color 0.3s;
+    }
+    body.dark-mode .container {
+      background-color: #2c2c2c;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
     h1 {
       text-align: center;
       margin-bottom: 10px;
       color: #333;
     }
+    body.dark-mode h1 {
+      color: #e0e0e0;
+    }
     .instruction {
       text-align: center;
       font-size: 0.95em;
       color: #555;
       margin-bottom: 20px;
+    }
+    body.dark-mode .instruction {
+      color: #adb5bd;
     }
     .input-group {
       margin: 15px 0;
@@ -40,43 +57,73 @@
       color: #444;
       margin-bottom: 5px;
     }
+    body.dark-mode label {
+      color: #e0e0e0;
+    }
     input {
       padding: 10px;
       font-size: 1em;
       border: 1px solid #ccc;
       border-radius: 4px;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode input {
+      background-color: #3a3a3a;
+      border-color: #555;
+      color: #e0e0e0;
     }
     input:focus {
       border-color: #4CAF50;
       outline: none;
     }
+    input:invalid, input[readonly] {
+      border-color: #dc3545;
+    }
     #result {
       margin-top: 20px;
       padding: 15px;
-      border-radius: 5px;
+      border-radius: 8px;
       font-weight: bold;
       text-align: center;
-      background-color: #e8f5e9;
-      border: 1px solid #4CAF50;
-      color: #2e7d32;
       display: none;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
     }
+    /* Light mode success styling */
     .success {
-      background-color: #e8f5e9;
-      color: #2e7d32;
-      border: 1px solid #4CAF50;
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      color: #155724;
+      border: 1px solid #c3e6cb;
     }
+    /* Light mode warning styling */
     .warning {
-      background-color: #fff3cd;
+      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
       color: #856404;
-      border: 1px solid #ffecb3;
+      border: 1px solid #ffeaa7;
     }
+    /* Light mode error styling */
     .error {
-      background-color: #f8d7da;
+      background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
       color: #721c24;
       border: 1px solid #f5c6cb;
+    }
+    /* Dark mode success styling */
+    body.dark-mode #result.success {
+      background: linear-gradient(135deg, #0f2419 0%, #1a4c2e 100%);
+      border: 1px solid #28a745;
+      color: #75c98b;
+    }
+    /* Dark mode warning styling */
+    body.dark-mode #result.warning {
+      background: linear-gradient(135deg, #2d1f00 0%, #4a3c0a 100%);
+      border: 1px solid #ffc107;
+      color: #ffdb4d;
+    }
+    /* Dark mode error styling */
+    body.dark-mode #result.error {
+      background: linear-gradient(135deg, #2c0a0e 0%, #4a1a22 100%);
+      border: 1px solid #dc3545;
+      color: #ff7b8a;
     }
     .button-container {
       text-align: center;
@@ -95,23 +142,74 @@
     button:hover {
       background-color: #45a049;
     }
-    /* Links styling (from Price Elasticity file) */
+    .reset-button {
+      background-color: #dc3545;
+    }
+    .reset-button:hover {
+      background-color: #c82333;
+    }
+    #dark-mode-toggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #6c757d;
+      padding: 8px;
+      font-size: 14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, transform 0.2s;
+      color: #fff;
+    }
+    #dark-mode-toggle:hover {
+      background-color: #5a6268;
+      transform: scale(1.1);
+    }
+    body.dark-mode #dark-mode-toggle {
+      background-color: #adb5bd;
+    }
+    body.dark-mode #dark-mode-toggle:hover {
+      background-color: #8f9ba6;
+    }
     .links {
       margin-top: 20px;
       text-align: center;
     }
     .links a {
-      color: #4CAF50;
+      color: #007bff;
       text-decoration: none;
+    }
+    body.dark-mode .links a {
+      color: #00b7eb;
     }
     .links a:hover {
       text-decoration: underline;
+    }
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+      button, .reset-button {
+        padding: 8px 16px;
+        font-size: 0.9em;
+      }
+      #dark-mode-toggle {
+        padding: 6px;
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>GDP Deflator Calculator | 平減物價指數計算器</h1>
+    <h1>GDP Calculator: Nominal GDP, Real GDP & GDP Deflator | 名義GDP、實質GDP和平減物價指數計算器</h1>
+    <button id="dark-mode-toggle">☾</button>
     <p class="instruction">
       Enter any two values and leave the third blank to compute it automatically.<br>
       請輸入兩個值，將要計算的空白處留空。
@@ -135,12 +233,18 @@
     <div id="result"></div>
     
     <div class="button-container">
-      <button onclick="resetCalculator()">Reset</button>
+      <button class="reset-button" onclick="resetCalculator()">Reset</button>
+    </div>
+
+    <div class="links">
+      <p><a href="https://outliersecon.github.io/Outliers-Economics">Back to Home | 返回首頁</a></p>
     </div>
   </div>
-<script src="https://outliersecon.github.io/Outliers-Economics/footer.js"></script>
+  
+  <script src="https://outliersecon.github.io/Outliers-Economics/footer.js"></script>
+  
   <script>
-function _0x3e2d(){const _0x1e234c=['toFixed','535409sRbofF','311xNYkkH','realGDP','871805rFeqBR','6378438oGOVjH','Computed\x20Nominal\x20GDP:\x20','18iqfrTj','result','Error:\x20Nominal\x20GDP\x20must\x20be\x20greater\x20than\x200.','display','48xwkccw','gdpDeflator','readOnly','1328930PqaaUh','All\x20values\x20are\x20consistent.','getElementById','Error:\x20GDP\x20Deflator\x20must\x20be\x20greater\x20than\x200.','2944760ekHnYU','12lNWqXs','success','3238iTosXy','innerHTML','style','Error:\x20Real\x20GDP\x20must\x20be\x20greater\x20than\x200.','trim','none','className','value','block','error','2228973GhdwWq','72hQCdCF','nominalGDP'];_0x3e2d=function(){return _0x1e234c;};return _0x3e2d();}(function(_0x26914c,_0x5c7aa1){const _0x36bc4a=_0x8206,_0x3a356a=_0x26914c();while(!![]){try{const _0x24b083=-parseInt(_0x36bc4a(0x16c))/0x1*(parseInt(_0x36bc4a(0x17f))/0x2)+parseInt(_0x36bc4a(0x167))/0x3+parseInt(_0x36bc4a(0x17c))/0x4+parseInt(_0x36bc4a(0x16e))/0x5*(parseInt(_0x36bc4a(0x171))/0x6)+-parseInt(_0x36bc4a(0x16b))/0x7*(parseInt(_0x36bc4a(0x175))/0x8)+parseInt(_0x36bc4a(0x168))/0x9*(-parseInt(_0x36bc4a(0x178))/0xa)+-parseInt(_0x36bc4a(0x16f))/0xb*(-parseInt(_0x36bc4a(0x17d))/0xc);if(_0x24b083===_0x5c7aa1)break;else _0x3a356a['push'](_0x3a356a['shift']());}catch(_0x54822e){_0x3a356a['push'](_0x3a356a['shift']());}}}(_0x3e2d,0x87e03));function _0x8206(_0x40acfe,_0x673dea){const _0x3e2d1f=_0x3e2d();return _0x8206=function(_0x8206d3,_0x219ad6){_0x8206d3=_0x8206d3-0x15e;let _0x430ef4=_0x3e2d1f[_0x8206d3];return _0x430ef4;},_0x8206(_0x40acfe,_0x673dea);}function restrictInput(_0x234229){const _0xd68b0a=_0x8206;_0x234229[_0xd68b0a(0x164)]<=0x0&&(_0x234229['value']='');}function resetCalculator(){const _0x1fbe73=_0x8206;document[_0x1fbe73(0x17a)](_0x1fbe73(0x169))[_0x1fbe73(0x164)]='',document['getElementById']('realGDP')['value']='',document['getElementById'](_0x1fbe73(0x176))[_0x1fbe73(0x164)]='',document[_0x1fbe73(0x17a)](_0x1fbe73(0x169))[_0x1fbe73(0x177)]=![],document[_0x1fbe73(0x17a)](_0x1fbe73(0x16d))[_0x1fbe73(0x177)]=![],document['getElementById'](_0x1fbe73(0x176))[_0x1fbe73(0x177)]=![],document[_0x1fbe73(0x17a)]('result')['style'][_0x1fbe73(0x174)]=_0x1fbe73(0x162),document[_0x1fbe73(0x17a)](_0x1fbe73(0x172))[_0x1fbe73(0x15e)]='',document['getElementById'](_0x1fbe73(0x172))[_0x1fbe73(0x163)]='';}function computeMissingValue(){const _0x9f0894=_0x8206,_0x8b25c6=document[_0x9f0894(0x17a)](_0x9f0894(0x169)),_0xa84522=document[_0x9f0894(0x17a)](_0x9f0894(0x16d)),_0x29888e=document[_0x9f0894(0x17a)](_0x9f0894(0x176)),_0x2d9a58=document[_0x9f0894(0x17a)](_0x9f0894(0x172));_0x8b25c6[_0x9f0894(0x177)]=![],_0xa84522[_0x9f0894(0x177)]=![],_0x29888e[_0x9f0894(0x177)]=![];let _0x12dd2d=_0x8b25c6[_0x9f0894(0x164)][_0x9f0894(0x161)]()===''?null:parseFloat(_0x8b25c6['value']),_0x1fd681=_0xa84522['value']['trim']()===''?null:parseFloat(_0xa84522[_0x9f0894(0x164)]),_0x1d506f=_0x29888e['value'][_0x9f0894(0x161)]()===''?null:parseFloat(_0x29888e['value']);_0x2d9a58[_0x9f0894(0x15f)]['display']=_0x9f0894(0x162),_0x2d9a58[_0x9f0894(0x15e)]='',_0x2d9a58[_0x9f0894(0x163)]='';if(_0x12dd2d!==null&&_0x12dd2d<=0x0){_0x2d9a58[_0x9f0894(0x15e)]=_0x9f0894(0x173),_0x2d9a58[_0x9f0894(0x163)]=_0x9f0894(0x166),_0x2d9a58['style'][_0x9f0894(0x174)]='block';return;}if(_0x1fd681!==null&&_0x1fd681<=0x0){_0x2d9a58[_0x9f0894(0x15e)]=_0x9f0894(0x160),_0x2d9a58[_0x9f0894(0x163)]=_0x9f0894(0x166),_0x2d9a58['style'][_0x9f0894(0x174)]=_0x9f0894(0x165);return;}if(_0x1d506f!==null&&_0x1d506f<=0x0){_0x2d9a58[_0x9f0894(0x15e)]=_0x9f0894(0x17b),_0x2d9a58['className']=_0x9f0894(0x166),_0x2d9a58['style'][_0x9f0894(0x174)]=_0x9f0894(0x165);return;}let _0x1917f1=0x0;_0x12dd2d!==null&&_0x1917f1++;_0x1fd681!==null&&_0x1917f1++;_0x1d506f!==null&&_0x1917f1++;if(_0x1917f1===0x2){if(_0x12dd2d===null){if(_0x1fd681!==null&&_0x1d506f!==null){let _0x34ed8b=_0x1d506f/0x64*_0x1fd681;_0x8b25c6[_0x9f0894(0x164)]=_0x34ed8b[_0x9f0894(0x16a)](0x2),_0x8b25c6[_0x9f0894(0x177)]=!![],_0x2d9a58['innerHTML']=_0x9f0894(0x170)+_0x34ed8b[_0x9f0894(0x16a)](0x2);}}else{if(_0x1fd681===null){if(_0x12dd2d!==null&&_0x1d506f!==null){let _0x28fe39=_0x12dd2d/(_0x1d506f/0x64);_0xa84522[_0x9f0894(0x164)]=_0x28fe39['toFixed'](0x2),_0xa84522['readOnly']=!![],_0x2d9a58[_0x9f0894(0x15e)]='Computed\x20Real\x20GDP:\x20'+_0x28fe39[_0x9f0894(0x16a)](0x2);}}else{if(_0x1d506f===null){if(_0x12dd2d!==null&&_0x1fd681!==null){let _0x1d4183=_0x12dd2d/_0x1fd681*0x64;_0x29888e['value']=_0x1d4183[_0x9f0894(0x16a)](0x2),_0x29888e['readOnly']=!![],_0x2d9a58['innerHTML']='Computed\x20GDP\x20Deflator:\x20'+_0x1d4183[_0x9f0894(0x16a)](0x2);}}}}_0x2d9a58[_0x9f0894(0x163)]='success',_0x2d9a58[_0x9f0894(0x15f)][_0x9f0894(0x174)]='block';}else{if(_0x1917f1===0x3){let _0x328860=_0x12dd2d/_0x1fd681*0x64;Math['abs'](_0x328860-_0x1d506f)<0.01?(_0x2d9a58[_0x9f0894(0x15e)]=_0x9f0894(0x179),_0x2d9a58[_0x9f0894(0x163)]=_0x9f0894(0x17e)):(_0x2d9a58[_0x9f0894(0x15e)]='Error:\x20Inconsistent\x20values.\x20Please\x20clear\x20one\x20field\x20to\x20compute\x20it\x20automatically.',_0x2d9a58[_0x9f0894(0x163)]=_0x9f0894(0x166)),_0x2d9a58[_0x9f0894(0x15f)][_0x9f0894(0x174)]=_0x9f0894(0x165);}}}
+const _0x39f6de=_0x3761;function _0x5590(){const _0xf76716=['67865mddyAX','Error\x20class\x20applied\x20for\x20invalid\x20GDP\x20Deflator','error','result','dark-mode','block','933776rmsFnS','body','472JqMZTd','addEventListener','Error\x20class\x20applied\x20for\x20invalid\x20nominal\x20GDP','84VjlFUu','success','Computed\x20Real\x20GDP:\x20','log','trim','Error\x20class\x20applied\x20for\x20inconsistent\x20values','style','toFixed','21264UTwXZX','nominalGDP','abs','getElementById','none','1765662euYYOC','gdpDeflator','1214130WKkBIk','30Nekhrn','521865pEwexT','display','Error:\x20GDP\x20Deflator\x20must\x20be\x20greater\x20than\x20zero.','toggle','Error:\x20Nominal\x20GDP\x20must\x20be\x20greater\x20than\x20zero.','dark-mode-toggle','All\x20values\x20are\x20consistent.','value','classList','70213AvXiRp','Error:\x20Real\x20GDP\x20must\x20be\x20greater\x20than\x20zero.','textContent','className','1xmgxSG','Error:\x20Inconsistent\x20values.\x20Please\x20clear\x20one\x20field\x20to\x20compute\x20it\x20automatically.','180Nfpfrz','contains','Success\x20class\x20applied\x20for\x20computed\x20nominal\x20GDP','innerHTML','Error\x20class\x20applied\x20for\x20invalid\x20real\x20GDP','readOnly','Success\x20class\x20applied\x20for\x20consistent\x20values','realGDP'];_0x5590=function(){return _0xf76716;};return _0x5590();}(function(_0xe12b9e,_0x462e23){const _0x2c517b=_0x3761,_0x3707ef=_0xe12b9e();while(!![]){try{const _0x141032=parseInt(_0x2c517b(0x15b))/0x1*(-parseInt(_0x2c517b(0x14c))/0x2)+parseInt(_0x2c517b(0x14a))/0x3+-parseInt(_0x2c517b(0x16b))/0x4+-parseInt(_0x2c517b(0x15d))/0x5*(parseInt(_0x2c517b(0x145))/0x6)+-parseInt(_0x2c517b(0x165))/0x7*(-parseInt(_0x2c517b(0x16d))/0x8)+-parseInt(_0x2c517b(0x14e))/0x9*(-parseInt(_0x2c517b(0x14d))/0xa)+parseInt(_0x2c517b(0x157))/0xb*(-parseInt(_0x2c517b(0x13d))/0xc);if(_0x141032===_0x462e23)break;else _0x3707ef['push'](_0x3707ef['shift']());}catch(_0x1f0f49){_0x3707ef['push'](_0x3707ef['shift']());}}}(_0x5590,0x4e8cc));function toggleDarkMode(){const _0x363d45=_0x3761;document[_0x363d45(0x16c)][_0x363d45(0x156)][_0x363d45(0x151)]('dark-mode');const _0xe0f70b=document[_0x363d45(0x148)](_0x363d45(0x153));_0xe0f70b[_0x363d45(0x159)]=document[_0x363d45(0x16c)][_0x363d45(0x156)][_0x363d45(0x15e)](_0x363d45(0x169))?'☀':'☾';}function restrictInput(_0x4754ab){const _0x5df93c=_0x3761;_0x4754ab['value']<=0x0&&(_0x4754ab[_0x5df93c(0x155)]='');}function _0x3761(_0xb39c6e,_0x50aaec){const _0x5590d5=_0x5590();return _0x3761=function(_0x3761b9,_0x352649){_0x3761b9=_0x3761b9-0x13c;let _0x49fca5=_0x5590d5[_0x3761b9];return _0x49fca5;},_0x3761(_0xb39c6e,_0x50aaec);}function resetCalculator(){const _0x420e4d=_0x3761;document['getElementById'](_0x420e4d(0x146))[_0x420e4d(0x155)]='',document['getElementById'](_0x420e4d(0x164))['value']='',document[_0x420e4d(0x148)](_0x420e4d(0x14b))[_0x420e4d(0x155)]='',document['getElementById'](_0x420e4d(0x146))[_0x420e4d(0x162)]=![],document['getElementById'](_0x420e4d(0x164))[_0x420e4d(0x162)]=![],document[_0x420e4d(0x148)](_0x420e4d(0x14b))['readOnly']=![],document[_0x420e4d(0x148)]('result')[_0x420e4d(0x143)]['display']=_0x420e4d(0x149),document['getElementById'](_0x420e4d(0x168))['innerHTML']='',document[_0x420e4d(0x148)](_0x420e4d(0x168))[_0x420e4d(0x15a)]='';}function computeMissingValue(){const _0x21bfed=_0x3761,_0x19134c=document[_0x21bfed(0x148)](_0x21bfed(0x146)),_0x3445ce=document['getElementById']('realGDP'),_0x30eba5=document['getElementById'](_0x21bfed(0x14b)),_0x172831=document[_0x21bfed(0x148)](_0x21bfed(0x168));_0x19134c[_0x21bfed(0x162)]=![],_0x3445ce[_0x21bfed(0x162)]=![],_0x30eba5[_0x21bfed(0x162)]=![];let _0x3c09c8=_0x19134c[_0x21bfed(0x155)][_0x21bfed(0x141)]()===''?null:parseFloat(_0x19134c[_0x21bfed(0x155)]),_0xd17367=_0x3445ce[_0x21bfed(0x155)][_0x21bfed(0x141)]()===''?null:parseFloat(_0x3445ce[_0x21bfed(0x155)]),_0x57e840=_0x30eba5[_0x21bfed(0x155)][_0x21bfed(0x141)]()===''?null:parseFloat(_0x30eba5[_0x21bfed(0x155)]);_0x172831['style'][_0x21bfed(0x14f)]=_0x21bfed(0x149),_0x172831[_0x21bfed(0x160)]='',_0x172831[_0x21bfed(0x15a)]='';if(_0x3c09c8!==null&&_0x3c09c8<=0x0){_0x172831[_0x21bfed(0x160)]=_0x21bfed(0x152),_0x172831[_0x21bfed(0x15a)]=_0x21bfed(0x167),_0x172831[_0x21bfed(0x143)][_0x21bfed(0x14f)]='block',console[_0x21bfed(0x140)](_0x21bfed(0x13c));return;}if(_0xd17367!==null&&_0xd17367<=0x0){_0x172831[_0x21bfed(0x160)]=_0x21bfed(0x158),_0x172831[_0x21bfed(0x15a)]=_0x21bfed(0x167),_0x172831[_0x21bfed(0x143)][_0x21bfed(0x14f)]=_0x21bfed(0x16a),console[_0x21bfed(0x140)](_0x21bfed(0x161));return;}if(_0x57e840!==null&&_0x57e840<=0x0){_0x172831[_0x21bfed(0x160)]=_0x21bfed(0x150),_0x172831[_0x21bfed(0x15a)]=_0x21bfed(0x167),_0x172831[_0x21bfed(0x143)]['display']='block',console[_0x21bfed(0x140)](_0x21bfed(0x166));return;}let _0x8f9422=0x0;_0x3c09c8!==null&&_0x8f9422++;_0xd17367!==null&&_0x8f9422++;_0x57e840!==null&&_0x8f9422++;if(_0x8f9422===0x2){if(_0x3c09c8===null){if(_0xd17367!==null&&_0x57e840!==null){let _0x543680=_0x57e840/0x64*_0xd17367;_0x19134c[_0x21bfed(0x155)]=_0x543680[_0x21bfed(0x144)](0x2),_0x19134c['readOnly']=![],_0x172831[_0x21bfed(0x160)]='Computed\x20Nominal\x20GDP:\x20'+_0x543680[_0x21bfed(0x144)](0x2),_0x172831[_0x21bfed(0x15a)]=_0x21bfed(0x13e),console[_0x21bfed(0x140)](_0x21bfed(0x15f));}}else{if(_0xd17367===null){if(_0x3c09c8!==null&&_0x57e840!==null){let _0x1186fc=_0x3c09c8/(_0x57e840/0x64);_0x3445ce['value']=_0x1186fc[_0x21bfed(0x144)](0x2),_0x3445ce[_0x21bfed(0x162)]=![],_0x172831[_0x21bfed(0x160)]=_0x21bfed(0x13f)+_0x1186fc['toFixed'](0x2),_0x172831[_0x21bfed(0x15a)]=_0x21bfed(0x13e),console['log']('Success\x20class\x20applied\x20for\x20computed\x20real\x20GDP');}}else{if(_0x57e840===null){if(_0x3c09c8!==null&&_0xd17367!==null){let _0x5b0f5c=_0x3c09c8/_0xd17367*0x64;_0x30eba5['value']=_0x5b0f5c[_0x21bfed(0x144)](0x2),_0x30eba5['readOnly']=![],_0x172831['innerHTML']='Computed\x20GDP\x20Deflator:\x20'+_0x5b0f5c[_0x21bfed(0x144)](0x2),_0x172831[_0x21bfed(0x15a)]='success',console['log']('Success\x20class\x20applied\x20for\x20computed\x20GDP\x20Deflator');}}}}_0x172831['style'][_0x21bfed(0x14f)]=_0x21bfed(0x16a);}else{if(_0x8f9422===0x3){let _0x28948c=_0x3c09c8/_0xd17367*0x64;Math[_0x21bfed(0x147)](_0x28948c-_0x57e840)<0.01?(_0x172831[_0x21bfed(0x160)]=_0x21bfed(0x154),_0x172831[_0x21bfed(0x15a)]=_0x21bfed(0x13e),console[_0x21bfed(0x140)](_0x21bfed(0x163))):(_0x172831[_0x21bfed(0x160)]=_0x21bfed(0x15c),_0x172831['className']=_0x21bfed(0x167),console[_0x21bfed(0x140)](_0x21bfed(0x142))),_0x172831['style'][_0x21bfed(0x14f)]='block';}}}document[_0x39f6de(0x148)](_0x39f6de(0x153))[_0x39f6de(0x16e)]('click',toggleDarkMode);
   </script>
 </body>
 </html>
