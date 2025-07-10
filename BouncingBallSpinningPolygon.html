@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Balls in Spinning Polygon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f4f7fa;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        body.dark-mode .container {
+            background-color: #2c2c2c;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode h2 {
+            color: #e0e0e0;
+        }
+
+        #dark-mode-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #6c757d;
+            padding: 8px;
+            font-size: 14px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            color: #fff;
+            border: none;
+        }
+
+        #dark-mode-toggle:hover {
+            background-color: #5a6268;
+            transform: scale(1.1);
+        }
+
+        body.dark-mode #dark-mode-toggle {
+            background-color: #adb5bd;
+        }
+
+        body.dark-mode #dark-mode-toggle:hover {
+            background-color: #8f9ba6;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+        }
+
+        label {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        body.dark-mode label {
+            color: #e0e0e0;
+        }
+
+        select, input[type="range"] {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            transition: background-color 0.3s, border-color 0.3s;
+            width: 100%;
+        }
+
+        body.dark-mode select, body.dark-mode input[type="range"] {
+            background-color: #3a3a3a;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+
+        canvas {
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        body.dark-mode canvas {
+            background-color: #3a3a3a;
+            border-color: #555;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                margin: 20px auto;
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            #dark-mode-toggle {
+                padding: 6px;
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+
+            canvas {
+                width: 100%;
+                height: auto;
+            }
+
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Bouncing Balls in Spinning Polygon</h2>
+        <button id="dark-mode-toggle">☾</button>
+        <div class="controls">
+            <div class="control-group">
+                <label for="rotation-speed">Rotation Speed</label>
+                <input type="range" id="rotation-speed" min="0" max="0.05" step="0.001" value="0.02">
+            </div>
+            <div class="control-group">
+                <label for="shape-sides">Shape Sides</label>
+                <select id="shape-sides">
+                    <option value="3">Triangle</option>
+                    <option value="4">Square</option>
+                    <option value="5">Pentagon</option>
+                    <option value="6" selected>Hexagon</option>
+                    <option value="7">Heptagon</option>
+                    <option value="8">Octagon</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="num-balls">Number of Balls</label>
+                <select id="num-balls">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="ball-size">Ball Size</label>
+                <input type="range" id="ball-size" min="10" max="30" step="1" value="15">
+            </div>
+            <div class="control-group">
+                <label for="mass-type">Mass Type</label>
+                <select id="mass-type">
+                    <option value="same" selected>Same Mass</option>
+                    <option value="proportional">Size Proportional</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="elasticity">Elasticity</label>
+                <input type="range" id="elasticity" min="0.5" max="1.0" step="0.01" value="0.9">
+            </div>
+        </div>
+        <canvas id="canvas" width="500" height="500"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const shapeRadius = 200;
+        const gravity = 0.5;
+        const friction = 0.85;
+
+        let balls = [];
+        let numBalls = 1;
+        let ballRadius = 15;
+        let restitution = 0.9;
+        let shapeAngle = 0;
+        let rotationSpeed = 0.02;
+        let numSides = 6;
+        let massType = 'same'; // 'same' or 'proportional'
+
+        // Colors for different balls
+        const ballColors = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8'];
+
+        // Initialize balls with non-overlapping positions
+        function initializeBalls(count, radius, restitution) {
+            balls = [];
+            const maxAttempts = 100;
+            
+            for (let i = 0; i < count; i++) {
+                let attempts = 0;
+                let newBall;
+                
+                // Determine ball size based on mass type
+                let ballSize;
+                if (massType === 'same') {
+                    // All balls have the same size when mass is the same
+                    ballSize = radius;
+                } else {
+                    // Vary ball sizes between 70% and 130% of the base radius for proportional mass
+                    ballSize = radius * (0.7 + Math.random() * 0.6);
+                }
+                
+                do {
+                    const angle = Math.random() * 2 * Math.PI;
+                    const r = (shapeRadius - ballSize) * 0.8 * Math.sqrt(Math.random());
+                    
+                    // Calculate mass based on mass type
+                    let mass;
+                    if (massType === 'same') {
+                        mass = 1; // All balls have the same mass
+                    } else {
+                        mass = ballSize * ballSize; // Mass proportional to area (radius^2)
+                    }
+                    
+                    newBall = {
+                        x: centerX + r * Math.cos(angle),
+                        y: centerY + r * Math.sin(angle),
+                        vx: (Math.random() - 0.5) * 10,
+                        vy: (Math.random() - 0.5) * 10,
+                        radius: ballSize,
+                        mass: mass,
+                        restitution: restitution,
+                        color: ballColors[i % ballColors.length]
+                    };
+                    attempts++;
+                } while (isOverlapping(newBall, balls) && attempts < maxAttempts);
+                
+                balls.push(newBall);
+            }
+        }
+
+        // Check if a new ball overlaps with existing balls
+        function isOverlapping(newBall, existingBalls) {
+            return existingBalls.some(ball => {
+                const dx = newBall.x - ball.x;
+                const dy = newBall.y - ball.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                return distance < (newBall.radius + ball.radius);
+            });
+        }
+
+        // Initial setup
+        initializeBalls(numBalls, ballRadius, restitution);
+
+        // Event listeners for controls
+        document.getElementById('rotation-speed').addEventListener('input', (e) => {
+            rotationSpeed = parseFloat(e.target.value);
+        });
+
+        document.getElementById('shape-sides').addEventListener('change', (e) => {
+            numSides = parseInt(e.target.value);
+            initializeBalls(numBalls, ballRadius, restitution);
+        });
+
+        document.getElementById('num-balls').addEventListener('change', (e) => {
+            numBalls = parseInt(e.target.value);
+            initializeBalls(numBalls, ballRadius, restitution);
+        });
+
+        document.getElementById('ball-size').addEventListener('input', (e) => {
+            ballRadius = parseInt(e.target.value);
+            initializeBalls(numBalls, ballRadius, restitution);
+        });
+
+        document.getElementById('mass-type').addEventListener('change', (e) => {
+            massType = e.target.value;
+            initializeBalls(numBalls, ballRadius, restitution);
+        });
+
+        document.getElementById('elasticity').addEventListener('input', (e) => {
+            restitution = parseFloat(e.target.value);
+            initializeBalls(numBalls, ballRadius, restitution);
+        });
+
+        // Calculate polygon vertices
+        function getPolygonVertices(angle, sides) {
+            const vertices = [];
+            for (let i = 0; i < sides; i++) {
+                const theta = angle + (i * 2 * Math.PI / sides);
+                vertices.push({
+                    x: centerX + shapeRadius * Math.cos(theta),
+                    y: centerY + shapeRadius * Math.sin(theta)
+                });
+            }
+            return vertices;
+        }
+
+        // Vector operations
+        function dotProduct(v1, v2) {
+            return v1.x * v2.x + v1.y * v2.y;
+        }
+
+        function vectorSubtract(v1, v2) {
+            return { x: v1.x - v2.x, y: v1.y - v2.y };
+        }
+
+        function vectorScale(v, scalar) {
+            return { x: v.x * scalar, y: v.y * scalar };
+        }
+
+        // Ball-ball collision detection and response
+        function checkBallBallCollisions() {
+            for (let i = 0; i < balls.length; i++) {
+                for (let j = i + 1; j < balls.length; j++) {
+                    const ball1 = balls[i];
+                    const ball2 = balls[j];
+                    const dx = ball2.x - ball1.x;
+                    const dy = ball2.y - ball1.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const minDistance = ball1.radius + ball2.radius;
+
+                    if (distance < minDistance && distance > 0) {
+                        // Collision detected
+                        const normal = { x: dx / distance, y: dy / distance };
+                        
+                        // Calculate relative velocity correctly
+                        const relativeVelocity = { 
+                            x: ball2.vx - ball1.vx, 
+                            y: ball2.vy - ball1.vy 
+                        };
+                        
+                        const vDotN = dotProduct(relativeVelocity, normal);
+
+                        if (vDotN < 0) { // Balls are approaching
+                            const avgRestitution = (ball1.restitution + ball2.restitution) / 2;
+                            const impulse = -(1 + avgRestitution) * vDotN / (1 / ball1.mass + 1 / ball2.mass);
+
+                            // Update velocities
+                            ball1.vx -= impulse * normal.x / ball1.mass;
+                            ball1.vy -= impulse * normal.y / ball1.mass;
+                            ball2.vx += impulse * normal.x / ball2.mass;
+                            ball2.vy += impulse * normal.y / ball2.mass;
+
+                            // Apply friction to tangential component
+                            const tangent = { x: -normal.y, y: normal.x };
+                            const vDotT1 = dotProduct({ x: ball1.vx, y: ball1.vy }, tangent);
+                            const vDotT2 = dotProduct({ x: ball2.vx, y: ball2.vy }, tangent);
+                            ball1.vx -= vDotT1 * tangent.x * (1 - friction);
+                            ball1.vy -= vDotT1 * tangent.y * (1 - friction);
+                            ball2.vx -= vDotT2 * tangent.x * (1 - friction);
+                            ball2.vy -= vDotT2 * tangent.y * (1 - friction);
+
+                            // Position correction to prevent overlap
+                            const overlap = minDistance - distance;
+                            const totalMass = ball1.mass + ball2.mass;
+                            const correctionFactor = overlap / 2;
+                            
+                            ball1.x -= normal.x * correctionFactor * (ball2.mass / totalMass);
+                            ball1.y -= normal.y * correctionFactor * (ball2.mass / totalMass);
+                            ball2.x += normal.x * correctionFactor * (ball1.mass / totalMass);
+                            ball2.y += normal.y * correctionFactor * (ball1.mass / totalMass);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Ball-wall collision detection and response
+        function checkWallCollision(ball) {
+            const vertices = getPolygonVertices(shapeAngle, numSides);
+            let closestDist = Infinity;
+            let closestEdge = null;
+            let closestNormal = null;
+            let closestPenetration = 0;
+            let closestPoint = null;
+
+            for (let i = 0; i < numSides; i++) {
+                const v1 = vertices[i];
+                const v2 = vertices[(i + 1) % numSides];
+                
+                const edge = vectorSubtract(v2, v1);
+                const edgeLength = Math.sqrt(edge.x * edge.x + edge.y * edge.y);
+                const edgeNormal = { x: -edge.y / edgeLength, y: edge.x / edgeLength };
+                
+                const ballToV1 = vectorSubtract(ball, v1);
+                const dist = dotProduct(ballToV1, edgeNormal);
+                
+                const proj = dotProduct(ballToV1, { x: edge.x / edgeLength, y: edge.y / edgeLength });
+                if (proj >= -ball.radius && proj <= edgeLength + ball.radius && Math.abs(dist) <= ball.radius) {
+                    const penetration = ball.radius - Math.abs(dist);
+                    if (Math.abs(dist) < Math.abs(closestDist)) {
+                        closestDist = dist;
+                        closestEdge = { v1, v2 };
+                        closestNormal = edgeNormal;
+                        closestPenetration = penetration;
+                        const t = Math.max(0, Math.min(1, proj / edgeLength));
+                        closestPoint = {
+                            x: v1.x + t * edge.x,
+                            y: v1.y + t * edge.y
+                        };
+                    }
+                }
+            }
+
+            if (closestEdge) {
+                const pointToCenter = vectorSubtract(closestPoint, { x: centerX, y: centerY });
+                const wallVelocity = {
+                    x: -rotationSpeed * pointToCenter.y,
+                    y: rotationSpeed * pointToCenter.x
+                };
+
+                const relativeVelocity = {
+                    x: ball.vx - wallVelocity.x,
+                    y: ball.vy - wallVelocity.y
+                };
+
+                const vDotN = dotProduct(relativeVelocity, closestNormal);
+                if (vDotN < 0) {
+                    ball.vx -= (1 + ball.restitution) * vDotN * closestNormal.x;
+                    ball.vy -= (1 + ball.restitution) * vDotN * closestNormal.y;
+
+                    const edge = vectorSubtract(closestEdge.v2, closestEdge.v1);
+                    const edgeLength = Math.sqrt(edge.x * edge.x + edge.y * edge.y);
+                    const tangent = { x: edge.x / edgeLength, y: edge.y / edgeLength };
+                    const vDotT = dotProduct(relativeVelocity, tangent);
+                    ball.vx -= vDotT * tangent.x * (1 - friction);
+                    ball.vy -= vDotT * tangent.y * (1 - friction);
+
+                    ball.x += closestNormal.x * closestPenetration * (closestDist > 0 ? 1 : -1) * 1.1;
+                    ball.y += closestNormal.y * closestPenetration * (closestDist > 0 ? 1 : -1) * 1.1;
+                }
+            }
+
+            const distFromCenter = Math.sqrt((ball.x - centerX) ** 2 + (ball.y - centerY) ** 2);
+            if (distFromCenter > shapeRadius - ball.radius) {
+                const angleToCenter = Math.atan2(ball.y - centerY, ball.x - centerX);
+                ball.x = centerX + (shapeRadius - ball.radius) * Math.cos(angleToCenter);
+                ball.y = centerY + (shapeRadius - ball.radius) * Math.sin(angleToCenter);
+                const relativeVelocity = {
+                    x: ball.vx - (-rotationSpeed * (ball.y - centerY)),
+                    y: ball.vy - (rotationSpeed * (ball.x - centerX))
+                };
+                const radial = { x: Math.cos(angleToCenter), y: Math.sin(angleToCenter) };
+                const vDotR = dotProduct(relativeVelocity, radial);
+                if (vDotR > 0) {
+                    ball.vx -= (1 + ball.restitution) * vDotR * radial.x;
+                    ball.vy -= (1 + ball.restitution) * vDotR * radial.y;
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update physics for each ball
+            balls.forEach(ball => {
+                ball.vy += gravity;
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+            });
+
+            // Check ball-ball collisions
+            checkBallBallCollisions();
+
+            // Check ball-wall collisions
+            balls.forEach(ball => checkWallCollision(ball));
+
+            // Rotate shape
+            shapeAngle += rotationSpeed;
+
+            // Draw polygon
+            ctx.beginPath();
+            const vertices = getPolygonVertices(shapeAngle, numSides);
+            ctx.moveTo(vertices[0].x, vertices[0].y);
+            for (let i = 1; i < numSides; i++) {
+                ctx.lineTo(vertices[i].x, vertices[i].y);
+            }
+            ctx.closePath();
+            ctx.strokeStyle = document.body.classList.contains('dark-mode') ? '#e0e0e0' : '#333';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            // Draw balls without borders
+            balls.forEach(ball => {
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+                ctx.fillStyle = ball.color;
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const toggleButton = document.getElementById('dark-mode-toggle');
+            toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀' : '☾';
+        }
+
+        // Event listener
+        document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>
