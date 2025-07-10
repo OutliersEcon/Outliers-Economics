@@ -1,13 +1,15 @@
 # Outliers Economics 經濟學學習平台
 
-這裡提供DSE Econ相關內容。
+這裡提供經濟學相關內容。
 
-## Calculator 計算器
+## DSE Economics DSE經濟學
+
+### Calculator 計算器
 - [Price Elasticity Calculator (需求價格彈性計算器)](Calculator/PriceElasticityCalculator_public)
 - [GDP Deflator Calculator (平減物價指數計算器)](Calculator/GDPDeflatorCalculator_public)
 - [Production Possibility Frontier (生產可能線)](Calculator/PPFBasic_public)
 
-## Quiz 測驗
+### Quiz 測驗
 - [Profit Maximization (利潤極大化)](Quiz/ProfitMaximization_public.html)
 - [Required Reserve Ratio (法定儲備比率)](Quiz/RequiredReserveRatio_public.html)
 
