@@ -16,6 +16,8 @@
 ## University Economics 大學經濟學
 - [Prisoner's Dilemma Simulator (囚徒困境模擬器)](Simulator/Prisoners%20Dilemma%20Simulator/PrisonersDilemmaSimulator_public)
 - [Cobb-Douglas Utility Simulator (Cobb-Douglas 功用函數模擬器)](Simulator/Cobb-Douglas%20Utility%20Simulator/Cobb-Douglas%20utility%20function_public)
+- [Production Possibility Frontier Simulator (生產可能線模擬器)](Simulator/PPF%20Simulator/PPFSimulator_public)]
+
 
 ## 其他
 - [聯絡我](mailto:outliers.hk@gmail.com)
