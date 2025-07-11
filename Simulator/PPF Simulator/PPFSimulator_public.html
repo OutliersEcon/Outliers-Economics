@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Production Possibility Frontier Simulator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Production Possibility Frontier Simulator</h2>
+    <button id="dark-mode-toggle">☾</button>
+    <p>Explore utility maximization with a Cobb-Douglas utility function under different PPF constraints.</p>
+
+    <!-- Tab Navigation -->
+    <div class="tab-group">
+      <button class="tab-button active" onclick="switchTab('straight')">Straight Line PPF</button>
+      <button class="tab-button" onclick="switchTab('concave')">Concave PPF</button>
+    </div>
+
+    <!-- Input Parameters -->
+    <h3>Input Parameters</h3>
+    <div class="input-group">
+      <label for="resources">Total Resources (R):</label>
+      <input type="number" id="resources" min="0.01" step="0.01" value="100" required>
+    </div>
+    <div class="input-group">
+      <label for="techX">Tech Parameter X (a):</label>
+      <input type="number" id="techX" min="0.01" step="0.01" value="2" required>
+    </div>
+    <div class="input-group">
+      <label for="techY">Tech Parameter Y (b):</label>
+      <input type="number" id="techY" min="0.01" step="0.01" value="4" required>
+    </div>
+    <div class="input-group">
+      <label for="alpha">Alpha (α):</label>
+      <input type="number" id="alpha" min="0.01" max="0.99" step="0.01" value="0.5" required>
+    </div>
+
+    <div class="error" id="inputError">Please enter valid positive numbers (0.01 ≤ α ≤ 0.99).</div>
+    <div class="button-group">
+      <button onclick="simulate()">Simulate</button>
+      <button onclick="clearInput()">Clear</button>
+      <button class="zoom-button" onclick="zoomChart(0.833)">Zoom In</button>
+      <button class="zoom-button" onclick="zoomChart(1.2)">Zoom Out</button>
+      <button class="zoom-button" onclick="autoFitZoom()">Auto-Fit</button>
+    </div>
+
+    <canvas id="ppfChart"></canvas>
+    <div id="results"></div>
+    <div id="tooltip"></div>
+  </div>
+
+  <div class="sidebar">
+    <h3>About the Simulator</h3>
+    <p><strong>Cobb-Douglas Utility Function:</strong> Represents consumer preferences:</p>
+    <div class="math-formula">
+      U(X, Y) = Xᵅ * Y⁽¹⁻ᵅ⁾
+    </div>
+    <p><strong>Production Possibility Frontier (PPF):</strong> Shows feasible combinations of Good X and Good Y given resource constraints.</p>
+    <p><strong>Straight Line PPF:</strong> Constant opportunity cost:</p>
+    <div class="math-formula">
+      aX + bY = R
+    </div>
+    <p><strong>Concave PPF:</strong> Increasing opportunity cost (simplified):</p>
+    <div class="math-formula">
+      X² + Y² = R
+    </div>
+    <p><strong>Utility Maximization:</strong> The optimal point occurs where the indifference curve is tangent to the PPF, satisfying:</p>
+    <div class="math-formula">
+      MRS = MRT, where MRS = (α/(1-α)) * (Y/X)
+    </div>
+    <p><strong>Inputs:</strong></p>
+    <ul>
+      <li><strong>Total Resources (R):</strong> Total resource constraint.</li>
+      <li><strong>Tech Parameter X (a):</strong> Resources required per unit of Good X.</li>
+      <li><strong>Tech Parameter Y (b):</strong> Resources required per unit of Good Y.</li>
+      <li><strong>Alpha (α):</strong> Preference for Good X in the utility function.</li>
+    </ul>
+    <p><strong>Zoom:</strong> Use Zoom In/Out or Auto-Fit to adjust the graph's viewable range.</p>
+    <p><strong>Tooltip:</strong> Hover over the graph to see coordinates.</p>
+  </div>
+<script src="https://outliersecon.github.io/Outliers-Economics/footer.js"></script>
+  <script src="script_public.js"></script>
+</body>
+</html>
