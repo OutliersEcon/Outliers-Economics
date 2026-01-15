@@ -9,7 +9,7 @@
 * [Price Elasticity Calculator (需求價格彈性計算器)](Calculator/PriceElasticityCalculator_public)
 * [GDP Deflator Calculator (平減物價指數計算器)](Calculator/GDPDeflatorCalculator_public)
 * [Production Possibility Frontier (生產可能線)](Calculator/PPFBasic_public)
-* [宏觀經濟關係](Calculator/gdp-inflation-population-calculator_public)
+* [Macroeconomic Relations 宏觀經濟關係](Calculator/gdp-inflation-population-calculator_public)
 
 ### Quiz 測驗
 
