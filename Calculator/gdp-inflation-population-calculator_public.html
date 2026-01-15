@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macroeconomic Relations Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom range slider styling for better UX */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: currentColor;
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e5e7eb;
+            border-radius: 2px;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen p-4">
+
+    <!-- Language Switcher (Top Right) -->
+    <div class="absolute top-4 right-4 z-10">
+        <button onclick="toggleLanguage()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded shadow-sm text-sm hover:bg-gray-50 transition-colors">
+            <span id="lang-btn-text">中文</span>
+        </button>
+    </div>
+
+    <div class="max-w-5xl mx-auto mt-8">
+        
+        <!-- Header -->
+        <header class="text-center py-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2" data-i18n="title">Macroeconomic Relations</h1>
+            <p class="text-gray-600" data-i18n="subtitle">Interactive formula explorer for GDP, Price Levels, and Population</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="flex justify-center mb-8">
+            <div class="bg-white p-1 rounded-lg border border-gray-200 shadow-sm inline-flex">
+                <button onclick="switchTab('levels')" id="btn-levels" class="px-6 py-2 rounded-md text-sm font-medium transition-colors bg-blue-600 text-white shadow-sm" data-i18n="tabLevels">
+                    Actual Values
+                </button>
+                <button onclick="switchTab('growth')" id="btn-growth" class="px-6 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50" data-i18n="tabGrowth">
+                    Growth Rates
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 1: LEVELS -->
+        <div id="tab-levels" class="grid grid-cols-1 lg:grid-cols-12 gap-6 fade-in">
+            
+            <!-- Inputs -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900" data-i18n="inputVars">Input Variables</h3>
+                        <button onclick="resetLevels()" class="text-xs text-blue-600 hover:underline" data-i18n="reset">Reset</button>
+                    </div>
+
+                    <!-- Real GDP Slider -->
+                    <div class="mb-6 text-blue-600">
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-medium text-gray-700" data-i18n="labelY">Real GDP (Y)</label>
+                            <span class="text-sm font-bold"><span id="val-Y">1000</span> <span data-i18n="unitB">B</span></span>
+                        </div>
+                        <input type="range" id="input-Y" min="100" max="5000" step="50" value="1000" class="w-full text-blue-600">
+                    </div>
+
+                    <!-- Price Level Slider -->
+                    <div class="mb-6 text-purple-600">
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-medium text-gray-700" data-i18n="labelP">Price Level (P)</label>
+                            <span class="text-sm font-bold"><span id="val-P">100</span></span>
+                        </div>
+                        <input type="range" id="input-P" min="50" max="200" step="1" value="100" class="w-full text-purple-600">
+                    </div>
+
+                    <!-- Population Slider -->
+                    <div class="mb-2 text-orange-600">
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-medium text-gray-700" data-i18n="labelPop">Population</label>
+                            <span class="text-sm font-bold"><span id="val-Pop">50</span> <span data-i18n="unitM">M</span></span>
+                        </div>
+                        <input type="range" id="input-Pop" min="1" max="200" step="1" value="50" class="w-full text-orange-600">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outputs -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Main Equation -->
+                <div class="bg-gradient-to-br from-white to-blue-50 rounded-xl border border-blue-100 shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4" data-i18n="aggEconomy">Aggregate Economy</h3>
+                    
+                    <div class="flex flex-col md:flex-row items-center justify-around gap-4 text-center">
+                        <!-- Nominal GDP Result -->
+                        <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-lg w-full md:w-auto flex-1">
+                            <div class="text-xs font-bold uppercase text-indigo-900 tracking-wider mb-1" data-i18n="resNominal">Nominal GDP (PY)</div>
+                            <div class="text-2xl font-bold text-indigo-900 mb-1">$<span id="out-PY">1,000</span> <span data-i18n="unitB">B</span></div>
+                            <div class="text-xs opacity-60" data-i18n="descNominal">at current market prices</div>
+                        </div>
+
+                        <div class="text-2xl font-mono text-gray-400">=</div>
+
+                        <!-- Calculation Breakdown -->
+                        <div class="flex items-center gap-2">
+                            <div class="text-center p-3 bg-white rounded border border-gray-200 shadow-sm">
+                                <span class="block text-xs text-gray-500 uppercase mb-1" data-i18n="labelY">Real GDP (Y)</span>
+                                <span class="font-bold text-blue-700 text-lg" id="calc-Y">1000</span>
+                            </div>
+                            <div class="text-gray-400 font-bold">×</div>
+                            <div class="text-center p-3 bg-white rounded border border-gray-200 shadow-sm">
+                                <span class="block text-xs text-gray-500 uppercase mb-1" data-i18n="calcPriceFactor">Price (P)/100</span>
+                                <span class="font-bold text-purple-700 text-lg" id="calc-P">1.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center text-xs text-gray-500 font-mono" data-i18n="formulaPY">Formula: PY = Y × (P / 100)</div>
+                </div>
+
+                <!-- Per Capita Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Per Capita Nominal -->
+                    <div class="bg-white rounded-xl border border-green-200 bg-green-50 p-6">
+                        <div class="text-xs font-bold uppercase text-green-900 tracking-wider mb-2" data-i18n="pcNominal">Per Capita Nominal GDP</div>
+                        <div class="text-3xl font-bold text-green-900 mb-2">$<span id="out-pc-nominal">20.00</span> k</div>
+                        <div class="text-xs font-mono opacity-80 border-t border-green-200 pt-2 mt-2" data-i18n="formulaPcNominal">
+                            = Nominal GDP / Population
+                        </div>
+                    </div>
+
+                    <!-- Per Capita Real -->
+                    <div class="bg-white rounded-xl border border-blue-200 bg-blue-50 p-6">
+                        <div class="text-xs font-bold uppercase text-blue-900 tracking-wider mb-2" data-i18n="pcReal">Per Capita Real GDP</div>
+                        <div class="text-3xl font-bold text-blue-900 mb-2">$<span id="out-pc-real">20.00</span> k</div>
+                        <div class="text-xs font-mono opacity-80 border-t border-blue-200 pt-2 mt-2" data-i18n="formulaPcReal">
+                            = Real GDP / Population
+                        </div>
+                        <div class="text-xs italic opacity-60 mt-1" data-i18n="stdLiving">Standard of Living</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: GROWTH -->
+        <div id="tab-growth" class="grid grid-cols-1 lg:grid-cols-12 gap-6 hidden fade-in">
+            
+            <!-- Inputs -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900" data-i18n="growthRates">Growth Rates (%)</h3>
+                        <button onclick="resetGrowth()" class="text-xs text-green-600 hover:underline" data-i18n="reset">Reset</button>
+                    </div>
+
+                    <!-- Real GDP Growth Slider -->
+                    <div class="mb-6 text-blue-600">
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-medium text-gray-700" data-i18n="labelGY">Real GDP Growth (gY)</label>
+                            <span class="text-sm font-bold"><span id="val-gY">3.0</span>%</span>
+                        </div>
+                        <input type="range" id="input-gY" min="-5" max="10" step="0.1" value="3.0" class="w-full text-blue-600">
+                    </div>
+
+                    <!-- Inflation Slider -->
+                    <div class="mb-6 text-purple-600">
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-medium text-gray-700" data-i18n="labelGP">Inflation Rate (gP)</label>
+                            <span class="text-sm font-bold"><span id="val-gP">2.0</span>%</span>
+                        </div>
+                        <input type="range" id="input-gP" min="-2" max="15" step="0.1" value="2.0" class="w-full text-purple-600">
+                    </div>
+
+                    <!-- Pop Growth Slider -->
+                    <div class="mb-2 text-orange-600">
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-medium text-gray-700" data-i18n="labelGPop">Pop. Growth (gPop)</label>
+                            <span class="text-sm font-bold"><span id="val-gPop">1.0</span>%</span>
+                        </div>
+                        <input type="range" id="input-gPop" min="-2" max="5" step="0.1" value="1.0" class="w-full text-orange-600">
+                    </div>
+
+                    <div class="mt-6 p-3 bg-yellow-50 border border-yellow-100 rounded text-xs text-yellow-800">
+                        <strong data-i18n="noteTitle">Note:</strong> <span data-i18n="noteText">These formulas use the linear approximation rule, which works best for small percentage changes.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outputs -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Nominal Growth Equation -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="bg-gray-50 px-6 py-4 border-b border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-900" data-i18n="nomGrowthTitle">Nominal GDP Growth</h3>
+                        <p class="text-xs text-gray-500 font-mono mt-1">gNominal ≈ gReal + gPrice</p>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center">
+                            
+                            <div class="p-4 bg-blue-50 rounded-xl border border-blue-200 w-full md:w-auto">
+                                <div class="text-xs text-blue-600 font-bold uppercase mb-1" data-i18n="boxRealGrowth">Real Growth</div>
+                                <div class="text-2xl font-bold text-blue-800"><span id="out-gY">3.0</span>%</div>
+                            </div>
+
+                            <div class="text-2xl font-bold text-gray-300">+</div>
+
+                            <div class="p-4 bg-purple-50 rounded-xl border border-purple-200 w-full md:w-auto">
+                                <div class="text-xs text-purple-600 font-bold uppercase mb-1" data-i18n="boxInflation">Inflation</div>
+                                <div class="text-2xl font-bold text-purple-800"><span id="out-gP">2.0</span>%</div>
+                            </div>
+
+                            <!-- Changed to Approximately Equals -->
+                            <div class="text-2xl font-bold text-gray-300">≈</div>
+
+                            <div class="p-4 bg-indigo-100 rounded-xl border-2 border-indigo-300 shadow-sm w-full md:w-auto transform md:scale-110">
+                                <div class="text-xs text-indigo-700 font-bold uppercase mb-1" data-i18n="boxNominalGrowth">Nominal Growth</div>
+                                <div class="text-3xl font-bold text-indigo-900"><span id="out-gNominal">5.0</span>%</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Per Capita Growth Equations -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Per Capita Nominal Growth -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                        <h3 class="text-base font-semibold text-gray-900 mb-4" data-i18n="pcNominalGrowthTitle">Per-Capita Nominal Growth</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
+                                <span class="text-gray-600" data-i18n="rowNominalGrowth">Nominal GDP Growth</span>
+                                <span class="font-mono font-bold text-indigo-600"><span id="calc-gNominal">5.0</span>%</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
+                                <span class="text-gray-600" data-i18n="rowPopGrowth">(-) Pop. Growth</span>
+                                <span class="font-mono font-bold text-orange-600"><span id="calc-gPop-1">1.0</span>%</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 bg-green-50 p-3 rounded-lg mt-2">
+                                <span class="font-bold text-green-900 text-sm" data-i18n="rowResult">Result</span>
+                                <span class="font-mono font-bold text-xl text-green-700"><span id="out-gPerCapNominal">4.0</span>%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Per Capita Real Growth -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                        <h3 class="text-base font-semibold text-gray-900 mb-4" data-i18n="pcRealGrowthTitle">Per-Capita Real Growth</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
+                                <span class="text-gray-600" data-i18n="rowRealGrowth">Real GDP Growth</span>
+                                <span class="font-mono font-bold text-blue-600"><span id="calc-gY">3.0</span>%</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
+                                <span class="text-gray-600" data-i18n="rowPopGrowth">(-) Pop. Growth</span>
+                                <span class="font-mono font-bold text-orange-600"><span id="calc-gPop-2">1.0</span>%</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 bg-blue-50 p-3 rounded-lg mt-2">
+                                <span class="font-bold text-blue-900 text-sm" data-i18n="rowResult">Result</span>
+                                <span class="font-mono font-bold text-xl text-blue-700"><span id="out-gPerCapReal">2.0</span>%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+const _0x53c3bd=_0x9141;(function(_0x425712,_0xfb514b){const _0x4c77bb=_0x9141,_0x3b7038=_0x425712();while(!![]){try{const _0x50cd7b=parseInt(_0x4c77bb(0x6d))/0x1*(parseInt(_0x4c77bb(0xc5))/0x2)+-parseInt(_0x4c77bb(0xa6))/0x3*(parseInt(_0x4c77bb(0x79))/0x4)+-parseInt(_0x4c77bb(0x97))/0x5*(-parseInt(_0x4c77bb(0xc7))/0x6)+-parseInt(_0x4c77bb(0xa5))/0x7+-parseInt(_0x4c77bb(0x83))/0x8+-parseInt(_0x4c77bb(0xb5))/0x9+-parseInt(_0x4c77bb(0x6c))/0xa*(-parseInt(_0x4c77bb(0xd0))/0xb);if(_0x50cd7b===_0xfb514b)break;else _0x3b7038['push'](_0x3b7038['shift']());}catch(_0x159626){_0x3b7038['push'](_0x3b7038['shift']());}}}(_0x3613,0xea75a));function _0x3613(){const _0x4bbb43=['querySelectorAll','Growth\x20Rates','Inflation','btn-levels','總體經濟','2882120AIEUSF','Per\x20Capita\x20Real\x20GDP','out-gY','bg-green-600','val-P','lang-btn-text','Nominal\x20GDP\x20(PY)','Result','calc-gY','實質增長','input','These\x20formulas\x20use\x20the\x20linear\x20approximation\x20rule,\x20which\x20works\x20best\x20for\x20small\x20percentage\x20changes.','hover:bg-gray-50','Pop.\x20Growth\x20(gPop)','Per-Capita\x20Real\x20Growth','addEventListener','Price\x20Level\x20(P)','(-)\x20人口增長','Actual\x20Values','實質\x20GDP\x20(Y)','25QLDjYa','out-gPerCapNominal','input-gY','Formula:\x20PY\x20=\x20Y\x20×\x20(P\x20/\x20100)','名義\x20GDP\x20增長','實質\x20GDP\x20增長\x20(gY)','input-P','tab-levels','[data-i18n]','out-gP','out-gNominal','val-gPop','input-Y','val-gY','5717250aAmuAk','4950RzAVUg','calc-P','Real\x20GDP\x20Growth\x20(gY)','out-PY','Price\x20(P)/100','Nominal\x20Growth','Interactive\x20formula\x20explorer\x20for\x20GDP,\x20Price\x20Levels,\x20and\x20Population','calc-gNominal','名義增長','classList','Growth\x20Rates\x20(%)','text-white','人均名義增長','btn-growth','val-Pop','9941904xDfFtN','通脹率\x20(gP)','getElementById','Nominal\x20GDP\x20Growth','shadow-sm','Standard\x20of\x20Living','input-Pop','Note:','calc-Y','(-)\x20Pop.\x20Growth','價格水平\x20(P)','toLocaleString','人口增長\x20(gPop)','forEach','增長率\x20(%)','val-Y','962FeGHlP','Real\x20GDP\x20Growth','1848048ioTTsi','Per\x20Capita\x20Nominal\x20GDP','人均實質\x20GDP','=\x20Nominal\x20GDP\x20/\x20Population','人均實質增長','remove','hidden','textContent','bg-blue-600','3157iJCYir','Input\x20Variables','=\x20名義\x20GDP\x20/\x20人口','Population','getAttribute','input-gP','text-gray-600','85940IhwCWp','829vaTDaO','English','add','=\x20實質\x20GDP\x20/\x20人口','toFixed','GDP、價格水平與人口的互動公式探索','這些公式使用線性近似法則，最適用於較小的百分比變化。','增長率','輸入變數','calc-gPop-2','生活水平','tab-growth','2820GsZIqt','value','Real\x20Growth','out-pc-nominal','input-gPop'];_0x3613=function(){return _0x4bbb43;};return _0x3613();}const translations={'en':{'title':'Macroeconomic\x20Relations','subtitle':_0x53c3bd(0xac),'tabLevels':_0x53c3bd(0x95),'tabGrowth':_0x53c3bd(0x7f),'inputVars':_0x53c3bd(0xd1),'reset':'Reset','labelY':'Real\x20GDP\x20(Y)','labelP':_0x53c3bd(0x93),'labelPop':_0x53c3bd(0xd3),'unitB':'B','unitM':'M','aggEconomy':'Aggregate\x20Economy','resNominal':_0x53c3bd(0x89),'descNominal':'at\x20current\x20market\x20prices','calcPriceFactor':_0x53c3bd(0xaa),'formulaPY':_0x53c3bd(0x9a),'pcNominal':_0x53c3bd(0xc8),'formulaPcNominal':_0x53c3bd(0xca),'pcReal':_0x53c3bd(0x84),'formulaPcReal':'=\x20Real\x20GDP\x20/\x20Population','stdLiving':_0x53c3bd(0xba),'growthRates':_0x53c3bd(0xb0),'labelGY':_0x53c3bd(0xa8),'labelGP':'Inflation\x20Rate\x20(gP)','labelGPop':_0x53c3bd(0x90),'noteTitle':_0x53c3bd(0xbc),'noteText':_0x53c3bd(0x8e),'nomGrowthTitle':_0x53c3bd(0xb8),'boxRealGrowth':_0x53c3bd(0x7b),'boxInflation':_0x53c3bd(0x80),'boxNominalGrowth':_0x53c3bd(0xab),'pcNominalGrowthTitle':'Per-Capita\x20Nominal\x20Growth','rowNominalGrowth':_0x53c3bd(0xb8),'rowPopGrowth':_0x53c3bd(0xbe),'rowResult':_0x53c3bd(0x8a),'pcRealGrowthTitle':_0x53c3bd(0x91),'rowRealGrowth':_0x53c3bd(0xc6)},'zh':{'title':'宏觀經濟關係','subtitle':_0x53c3bd(0x72),'tabLevels':'實際數值','tabGrowth':_0x53c3bd(0x74),'inputVars':_0x53c3bd(0x75),'reset':'重置','labelY':_0x53c3bd(0x96),'labelP':_0x53c3bd(0xbf),'labelPop':'人口','unitB':'十億','unitM':'百萬','aggEconomy':_0x53c3bd(0x82),'resNominal':'名義\x20GDP\x20(PY)','descNominal':'以當時市價計算','calcPriceFactor':'價格水平\x20(P)/100','formulaPY':'公式:\x20PY\x20=\x20Y\x20×\x20(P\x20/\x20100)','pcNominal':'人均名義\x20GDP','formulaPcNominal':_0x53c3bd(0xd2),'pcReal':_0x53c3bd(0xc9),'formulaPcReal':_0x53c3bd(0x70),'stdLiving':_0x53c3bd(0x77),'growthRates':_0x53c3bd(0xc3),'labelGY':_0x53c3bd(0x9c),'labelGP':_0x53c3bd(0xb6),'labelGPop':_0x53c3bd(0xc1),'noteTitle':'注意:','noteText':_0x53c3bd(0x73),'nomGrowthTitle':_0x53c3bd(0x9b),'boxRealGrowth':_0x53c3bd(0x8c),'boxInflation':'通膨','boxNominalGrowth':_0x53c3bd(0xae),'pcNominalGrowthTitle':_0x53c3bd(0xb2),'rowNominalGrowth':_0x53c3bd(0x9b),'rowPopGrowth':_0x53c3bd(0x94),'rowResult':'結果','pcRealGrowthTitle':_0x53c3bd(0xcb),'rowRealGrowth':'實質\x20GDP\x20增長'}};let currentLang='en';function toggleLanguage(){const _0x5c8f24=_0x53c3bd;currentLang=currentLang==='en'?'zh':'en',document[_0x5c8f24(0xb7)](_0x5c8f24(0x88))[_0x5c8f24(0xce)]=currentLang==='en'?'中文':_0x5c8f24(0x6e),document[_0x5c8f24(0x7e)](_0x5c8f24(0x9f))[_0x5c8f24(0xc2)](_0x533524=>{const _0x4c67a5=_0x5c8f24,_0x341c3a=_0x533524[_0x4c67a5(0x69)]('data-i18n');translations[currentLang][_0x341c3a]&&(_0x533524[_0x4c67a5(0xce)]=translations[currentLang][_0x341c3a]);});}function _0x9141(_0x11bacb,_0x42097c){_0x11bacb=_0x11bacb-0x69;const _0x36135c=_0x3613();let _0x914136=_0x36135c[_0x11bacb];return _0x914136;}const inputY=document[_0x53c3bd(0xb7)](_0x53c3bd(0xa3)),inputP=document[_0x53c3bd(0xb7)](_0x53c3bd(0x9d)),inputPop=document[_0x53c3bd(0xb7)](_0x53c3bd(0xbb));function updateLevels(){const _0x4eaee7=_0x53c3bd,_0x3e90e4=parseFloat(inputY['value']),_0x1a1e94=parseFloat(inputP['value']),_0x950c3e=parseFloat(inputPop[_0x4eaee7(0x7a)]);document[_0x4eaee7(0xb7)](_0x4eaee7(0xc4))[_0x4eaee7(0xce)]=_0x3e90e4[_0x4eaee7(0xc0)](),document['getElementById'](_0x4eaee7(0x87))['textContent']=_0x1a1e94,document[_0x4eaee7(0xb7)](_0x4eaee7(0xb4))['textContent']=_0x950c3e;const _0x4c342d=_0x3e90e4*_0x1a1e94/0x64,_0x5f19bb=_0x4c342d/_0x950c3e,_0x4aff29=_0x3e90e4/_0x950c3e;document[_0x4eaee7(0xb7)](_0x4eaee7(0xa9))[_0x4eaee7(0xce)]=_0x4c342d[_0x4eaee7(0xc0)](undefined,{'maximumFractionDigits':0x1}),document[_0x4eaee7(0xb7)](_0x4eaee7(0xbd))[_0x4eaee7(0xce)]=_0x3e90e4[_0x4eaee7(0xc0)](),document[_0x4eaee7(0xb7)](_0x4eaee7(0xa7))[_0x4eaee7(0xce)]=(_0x1a1e94/0x64)[_0x4eaee7(0x71)](0x2),document[_0x4eaee7(0xb7)](_0x4eaee7(0x7c))[_0x4eaee7(0xce)]=_0x5f19bb['toFixed'](0x2),document[_0x4eaee7(0xb7)]('out-pc-real')[_0x4eaee7(0xce)]=_0x4aff29[_0x4eaee7(0x71)](0x2);}function resetLevels(){const _0x134520=_0x53c3bd;inputY[_0x134520(0x7a)]=0x3e8,inputP[_0x134520(0x7a)]=0x64,inputPop[_0x134520(0x7a)]=0x32,updateLevels();}const inputGY=document[_0x53c3bd(0xb7)](_0x53c3bd(0x99)),inputGP=document['getElementById'](_0x53c3bd(0x6a)),inputGPop=document[_0x53c3bd(0xb7)](_0x53c3bd(0x7d));function updateGrowth(){const _0x284cc2=_0x53c3bd,_0x3da9dd=parseFloat(inputGY[_0x284cc2(0x7a)]),_0x1910e7=parseFloat(inputGP[_0x284cc2(0x7a)]),_0x4bb678=parseFloat(inputGPop[_0x284cc2(0x7a)]);document[_0x284cc2(0xb7)](_0x284cc2(0xa4))[_0x284cc2(0xce)]=_0x3da9dd[_0x284cc2(0x71)](0x1),document[_0x284cc2(0xb7)]('val-gP')[_0x284cc2(0xce)]=_0x1910e7[_0x284cc2(0x71)](0x1),document['getElementById'](_0x284cc2(0xa2))['textContent']=_0x4bb678[_0x284cc2(0x71)](0x1);const _0x509dd6=_0x3da9dd+_0x1910e7,_0x17a7c6=_0x509dd6-_0x4bb678,_0x19c0ec=_0x3da9dd-_0x4bb678;document['getElementById'](_0x284cc2(0x85))[_0x284cc2(0xce)]=_0x3da9dd[_0x284cc2(0x71)](0x1),document['getElementById'](_0x284cc2(0xa0))['textContent']=_0x1910e7[_0x284cc2(0x71)](0x1),document['getElementById'](_0x284cc2(0xa1))[_0x284cc2(0xce)]=_0x509dd6['toFixed'](0x1),document[_0x284cc2(0xb7)](_0x284cc2(0xad))[_0x284cc2(0xce)]=_0x509dd6[_0x284cc2(0x71)](0x1),document[_0x284cc2(0xb7)]('calc-gPop-1')[_0x284cc2(0xce)]=_0x4bb678[_0x284cc2(0x71)](0x1),document[_0x284cc2(0xb7)](_0x284cc2(0x98))[_0x284cc2(0xce)]=_0x17a7c6[_0x284cc2(0x71)](0x1),document[_0x284cc2(0xb7)](_0x284cc2(0x8b))[_0x284cc2(0xce)]=_0x3da9dd[_0x284cc2(0x71)](0x1),document[_0x284cc2(0xb7)](_0x284cc2(0x76))['textContent']=_0x4bb678['toFixed'](0x1),document[_0x284cc2(0xb7)]('out-gPerCapReal')[_0x284cc2(0xce)]=_0x19c0ec[_0x284cc2(0x71)](0x1);}function resetGrowth(){const _0x2f32e3=_0x53c3bd;inputGY['value']=0x3,inputGP[_0x2f32e3(0x7a)]=0x2,inputGPop['value']=0x1,updateGrowth();}function switchTab(_0x409b3d){const _0x1e571a=_0x53c3bd,_0x342b3d=document[_0x1e571a(0xb7)](_0x1e571a(0x9e)),_0x2504fa=document[_0x1e571a(0xb7)](_0x1e571a(0x78)),_0x4b5601=document[_0x1e571a(0xb7)](_0x1e571a(0x81)),_0x23f6f7=document[_0x1e571a(0xb7)](_0x1e571a(0xb3));_0x409b3d==='levels'?(_0x342b3d['classList'][_0x1e571a(0xcc)](_0x1e571a(0xcd)),_0x2504fa['classList'][_0x1e571a(0x6f)](_0x1e571a(0xcd)),_0x4b5601['classList'][_0x1e571a(0x6f)](_0x1e571a(0xcf),_0x1e571a(0xb1),'shadow-sm'),_0x4b5601[_0x1e571a(0xaf)]['remove'](_0x1e571a(0x6b),_0x1e571a(0x8f)),_0x23f6f7[_0x1e571a(0xaf)][_0x1e571a(0xcc)](_0x1e571a(0x86),'text-white',_0x1e571a(0xb9)),_0x23f6f7[_0x1e571a(0xaf)][_0x1e571a(0x6f)](_0x1e571a(0x6b),_0x1e571a(0x8f))):(_0x342b3d[_0x1e571a(0xaf)][_0x1e571a(0x6f)](_0x1e571a(0xcd)),_0x2504fa[_0x1e571a(0xaf)][_0x1e571a(0xcc)](_0x1e571a(0xcd)),_0x4b5601[_0x1e571a(0xaf)]['remove'](_0x1e571a(0xcf),_0x1e571a(0xb1),_0x1e571a(0xb9)),_0x4b5601[_0x1e571a(0xaf)][_0x1e571a(0x6f)](_0x1e571a(0x6b),_0x1e571a(0x8f)),_0x23f6f7['classList'][_0x1e571a(0x6f)]('bg-green-600',_0x1e571a(0xb1),'shadow-sm'),_0x23f6f7[_0x1e571a(0xaf)][_0x1e571a(0xcc)](_0x1e571a(0x6b),_0x1e571a(0x8f)));}[inputY,inputP,inputPop][_0x53c3bd(0xc2)](_0x325e84=>_0x325e84['addEventListener']('input',updateLevels)),[inputGY,inputGP,inputGPop]['forEach'](_0x22524b=>_0x22524b[_0x53c3bd(0x92)](_0x53c3bd(0x8d),updateGrowth)),updateLevels(),updateGrowth();
+    </script>
+</body>
+</html>
